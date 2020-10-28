@@ -3,7 +3,7 @@ package org.cryptomator.integrations.keychain;
 /**
  * This is the interface used by Cryptomator to store passwords securely in external keychains, such as system keychains or password managers.
  */
-public interface KeychainAccessIntegration {
+public interface KeychainAccessProvider {
 
 	/**
 	 * Associates a passphrase with a given key.
