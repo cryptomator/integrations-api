@@ -2,9 +2,9 @@ package org.cryptomator.integrations.autostart;
 
 public interface AutoStartProvider {
 
-	void enable() throws ToogleAutoStartFailedException;
+	void enable() throws ToggleAutoStartFailedException;
 
-	void disable() throws ToogleAutoStartFailedException;
+	void disable() throws ToggleAutoStartFailedException;
 
 	boolean isEnabled();
 
