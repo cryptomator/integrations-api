@@ -8,3 +8,8 @@ For example let's say you want to add a new keychain integration. You just need 
 1. Create a class, e.g. `com.example.mycryptomatorplugin.PwManager3000Integration` which extends `org.cryptomator.integrations.keychain.KeychainAccessProvider` and implement the methods according to the interface.
 1. Create a provider configuration file at `META-INF/services/org.cryptomator.integrations.keychain.KeychainAccessProvider` and add your implementation (`com.example.mycryptomatorplugin.PwManager3000Integration`)
 1. Publish your library as a jar file and include it to Cryptomator's class path at runtime (PRs are welcome)
+
+Implementations of the Integrations API can be found here:
+- https://github.com/cryptomator/integrations-win
+- https://github.com/cryptomator/integrations-mac
+- https://github.com/cryptomator/integrations-linux
