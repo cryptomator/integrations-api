@@ -45,4 +45,11 @@ public interface KeychainAccessProvider {
 	 */
 	boolean isSupported();
 
+	/**
+	 * @return <code>true</code> if the keychain to be accessed is locked. Accesing a locked keychain
+	 * requires to unlock the keychain. The keychain backend will show an unlock dialog.
+	 * returning <code>false</code> if the keychain to be accessed is unlocked
+	 */
+	boolean isLocked();
+
 }
