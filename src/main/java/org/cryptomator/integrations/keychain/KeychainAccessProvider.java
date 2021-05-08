@@ -52,4 +52,18 @@ public interface KeychainAccessProvider {
 	 */
 	boolean isLocked();
 
+	/**
+	 * @return <code>true</code> if this KeychainAccessIntegration needs to be associated with the KeychainBackend.
+	 * @implSpec This method must not throw any exceptions and should fail fast
+	 * returning <code>false</code> if the KeychainAccessIntegration was associated with the KeychainBackend and the KeychainAccessIntegration can use the KeychainBackend.
+	 */
+	default boolean needsAssociation() { return false; }
+
+	/**
+	 * @return <code>true</code> if associating the KeychainAccessIntegration with the KeychainBackend was successfull.
+	 * @implSpec This method must not throw any exceptions and should fail fast
+	 * returning <code>false</code> if association failed
+	 */
+	default boolean associate() { return true; }
+
 }
