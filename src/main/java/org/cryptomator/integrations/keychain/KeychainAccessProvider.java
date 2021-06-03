@@ -53,14 +53,18 @@ public interface KeychainAccessProvider {
 	boolean isLocked();
 
 	/**
-	 * @return <code>true</code> if this KeychainAccessIntegration needs to be associated with the KeychainBackend.
+	 * @return <code>true</code> if this KeychainAccessIntegration needs to be associated with the KeychainBackend. If a backend requires a handshaking before it can be accessed,
+	 * e.g. the KeychainAccessIntegration and the backend exchange cryptographic keys to establish an encrypted connection, this method checks whether the KeychainAccessIntegration
+	 * already has been associated to the backend or not.
 	 * @implSpec This method must not throw any exceptions and should fail fast
 	 * returning <code>false</code> if the KeychainAccessIntegration was associated with the KeychainBackend and the KeychainAccessIntegration can use the KeychainBackend.
 	 */
 	default boolean needsAssociation() { return false; }
 
 	/**
-	 * @return <code>true</code> if associating the KeychainAccessIntegration with the KeychainBackend was successfull.
+	 * @return <code>true</code> if associating the KeychainAccessIntegration with the KeychainBackend was successfull. If a backend requires a handshaking before it can be accessed,
+	 * e.g. the KeychainAccessIntegration and the backend exchange cryptographic keys to establish an encrypted connection, this method associates the KeychainAccessIntegration with the
+	 * backend. The keychain backend will show an association dialog.
 	 * @implSpec This method must not throw any exceptions and should fail fast
 	 * returning <code>false</code> if association failed
 	 */
