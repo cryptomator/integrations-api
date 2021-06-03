@@ -13,4 +13,4 @@ Implementations of the Integrations API can be found here:
 - https://github.com/cryptomator/integrations-win
 - https://github.com/cryptomator/integrations-mac
 - https://github.com/cryptomator/integrations-linux
-- https://github.com/purejava/keepassxc-cryptomator.git
+- https://github.com/purejava/keepassxc-cryptomator
