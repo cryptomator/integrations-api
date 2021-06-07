@@ -6,6 +6,16 @@ package org.cryptomator.integrations.keychain;
 public interface KeychainAccessProvider {
 
 	/**
+	 * A name to display in UI elements. If required, this should be localized.
+	 *
+	 * @return user-friendly name (must not be null or empty)
+	 */
+	default String displayName() {
+		// FIXME remove default method in 1.0.0
+		return getClass().getSimpleName();
+	}
+
+	/**
 	 * Associates a passphrase with a given key.
 	 *
 	 * @param key        Key used to retrieve the passphrase via {@link #loadPassphrase(String)}.
