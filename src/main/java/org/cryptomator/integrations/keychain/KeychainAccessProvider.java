@@ -10,10 +10,7 @@ public interface KeychainAccessProvider {
 	 *
 	 * @return user-friendly name (must not be null or empty)
 	 */
-	default String displayName() {
-		// FIXME remove default method in 1.0.0
-		return getClass().getSimpleName();
-	}
+	String displayName();
 
 	/**
 	 * Associates a passphrase with a given key.
