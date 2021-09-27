@@ -6,6 +6,13 @@ package org.cryptomator.integrations.keychain;
 public interface KeychainAccessProvider {
 
 	/**
+	 * A name to display in UI elements. If required, this should be localized.
+	 *
+	 * @return user-friendly name (must not be null or empty)
+	 */
+	String displayName();
+
+	/**
 	 * Associates a passphrase with a given key.
 	 *
 	 * @param key        Key used to retrieve the passphrase via {@link #loadPassphrase(String)}.
@@ -44,5 +51,12 @@ public interface KeychainAccessProvider {
 	 * returning <code>false</code> if it can't determine availability of the checked strategy
 	 */
 	boolean isSupported();
+
+	/**
+	 * @return <code>true</code> if the keychain to be accessed is locked. Accesing a locked keychain
+	 * requires to unlock the keychain. The keychain backend will show an unlock dialog.
+	 * returning <code>false</code> if the keychain to be accessed is unlocked
+	 */
+	boolean isLocked();
 
 }

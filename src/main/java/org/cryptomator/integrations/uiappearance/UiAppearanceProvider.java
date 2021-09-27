@@ -32,6 +32,8 @@ public interface UiAppearanceProvider {
 
 	/**
 	 * Removes a previously registered listener.
+	 * <p>
+	 * If the given listener has not been previously registered (i.e. it was never added) then this method call is a no-op.
 	 *
 	 * @param listener The listener
 	 * @throws UiAppearanceException If removing the listener failed.
