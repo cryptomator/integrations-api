@@ -22,6 +22,16 @@ public interface KeychainAccessProvider {
 	void storePassphrase(String key, CharSequence passphrase) throws KeychainAccessException;
 
 	/**
+	 * Associates a passphrase with a given key and a name for that key.
+	 *
+	 * @param key        Key used to retrieve the passphrase via {@link #loadPassphrase(String)}.
+	 * @param name       The according name to the key.
+	 * @param passphrase The secret to store in this keychain.
+	 * @throws KeychainAccessException If storing the password failed
+	 */
+	default void storePassphrase(String key, String name, CharSequence passphrase) throws KeychainAccessException { }
+
+	/**
 	 * @param key Unique key previously used while {@link #storePassphrase(String, CharSequence) storing a passphrase}.
 	 * @return The stored passphrase for the given key or <code>null</code> if no value for the given key could be found.
 	 * @throws KeychainAccessException If loading the password failed
