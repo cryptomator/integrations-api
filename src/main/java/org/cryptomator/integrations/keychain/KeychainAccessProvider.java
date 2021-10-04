@@ -24,12 +24,14 @@ public interface KeychainAccessProvider {
 	/**
 	 * Associates a passphrase with a given key and a name for that key.
 	 *
-	 * @param key        Key used to retrieve the passphrase via {@link #loadPassphrase(String)}.
-	 * @param name       The according name to the key.
-	 * @param passphrase The secret to store in this keychain.
+	 * @param key         Key used to retrieve the passphrase via {@link #loadPassphrase(String)}.
+	 * @param displayName The according name to the key.
+	 * @param passphrase  The secret to store in this keychain.
 	 * @throws KeychainAccessException If storing the password failed
 	 */
-	default void storePassphrase(String key, String name, CharSequence passphrase) throws KeychainAccessException { }
+	default void storePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException {
+		storePassphrase(key, passphrase);
+	}
 
 	/**
 	 * @param key Unique key previously used while {@link #storePassphrase(String, CharSequence) storing a passphrase}.
