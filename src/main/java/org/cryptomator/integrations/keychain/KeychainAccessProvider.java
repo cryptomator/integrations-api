@@ -58,6 +58,18 @@ public interface KeychainAccessProvider {
 	void changePassphrase(String key, CharSequence passphrase) throws KeychainAccessException;
 
 	/**
+	 * Updates a passphrase with a given key and stores a name for that key. Noop, if there is no item for the given key.
+	 *
+	 * @param key         Unique key previously used while {@link #storePassphrase(String, CharSequence) storing a passphrase}.
+	 * @param displayName The according name to the key.
+	 * @param passphrase  The secret to be updated in this keychain.
+	 * @throws KeychainAccessException If changing the password failed
+	 */
+	default void changePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException {
+		changePassphrase(key, passphrase);
+	}
+
+	/**
 	 * @return <code>true</code> if this KeychainAccessIntegration works on the current machine.
 	 * @implSpec This method must not throw any exceptions and should fail fast
 	 * returning <code>false</code> if it can't determine availability of the checked strategy
