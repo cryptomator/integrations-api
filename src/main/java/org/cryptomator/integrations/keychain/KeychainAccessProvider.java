@@ -18,7 +18,9 @@ public interface KeychainAccessProvider {
 	 * @param key        Key used to retrieve the passphrase via {@link #loadPassphrase(String)}.
 	 * @param passphrase The secret to store in this keychain.
 	 * @throws KeychainAccessException If storing the password failed
+	 * @deprecated Please use {@link #storePassphrase(String, String, CharSequence)} instead
 	 */
+	@Deprecated
 	void storePassphrase(String key, CharSequence passphrase) throws KeychainAccessException;
 
 	/**
@@ -56,7 +58,9 @@ public interface KeychainAccessProvider {
 	 * @param key        Unique key previously used while {@link #storePassphrase(String, CharSequence) storing a passphrase}.
 	 * @param passphrase The secret to be updated in this keychain.
 	 * @throws KeychainAccessException If changing the password failed
+	 * @deprecated Please use {@link #changePassphrase(String, String, CharSequence)} instead
 	 */
+	@Deprecated
 	void changePassphrase(String key, CharSequence passphrase) throws KeychainAccessException;
 
 	/**
