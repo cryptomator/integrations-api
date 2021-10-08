@@ -18,8 +18,24 @@ public interface KeychainAccessProvider {
 	 * @param key        Key used to retrieve the passphrase via {@link #loadPassphrase(String)}.
 	 * @param passphrase The secret to store in this keychain.
 	 * @throws KeychainAccessException If storing the password failed
+	 * @deprecated Please use {@link #storePassphrase(String, String, CharSequence)} instead
 	 */
+	@Deprecated
 	void storePassphrase(String key, CharSequence passphrase) throws KeychainAccessException;
+
+	/**
+	 * Associates a passphrase with a given key and a name for that key.
+	 *
+	 * @param key         Key used to retrieve the passphrase via {@link #loadPassphrase(String)}.
+	 * @param displayName The according name to the key. That's the name of the vault displayed in the UI.
+	 *                    It's passed to the keychain as an additional information about the vault besides the key.
+	 *                    The parameter does not need to be unique or be checked by the keychain.
+	 * @param passphrase  The secret to store in this keychain.
+	 * @throws KeychainAccessException If storing the password failed
+	 */
+	default void storePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException {
+		storePassphrase(key, passphrase);
+	}
 
 	/**
 	 * @param key Unique key previously used while {@link #storePassphrase(String, CharSequence) storing a passphrase}.
@@ -42,8 +58,24 @@ public interface KeychainAccessProvider {
 	 * @param key        Unique key previously used while {@link #storePassphrase(String, CharSequence) storing a passphrase}.
 	 * @param passphrase The secret to be updated in this keychain.
 	 * @throws KeychainAccessException If changing the password failed
+	 * @deprecated Please use {@link #changePassphrase(String, String, CharSequence)} instead
 	 */
+	@Deprecated
 	void changePassphrase(String key, CharSequence passphrase) throws KeychainAccessException;
+
+	/**
+	 * Updates a passphrase with a given key and stores a name for that key. Noop, if there is no item for the given key.
+	 *
+	 * @param key         Unique key previously used while {@link #storePassphrase(String, CharSequence) storing a passphrase}.
+	 * @param displayName The according name to the key. That's the name of the vault displayed in the UI.
+	 *                    It's passed to the keychain as an additional information about the vault besides the key.
+	 *                    The parameter does not need to be unique or be checked by the keychain.
+	 * @param passphrase  The secret to be updated in this keychain.
+	 * @throws KeychainAccessException If changing the password failed
+	 */
+	default void changePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException {
+		changePassphrase(key, passphrase);
+	}
 
 	/**
 	 * @return <code>true</code> if this KeychainAccessIntegration works on the current machine.
