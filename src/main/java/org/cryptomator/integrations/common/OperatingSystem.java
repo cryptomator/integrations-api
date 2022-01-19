@@ -30,7 +30,7 @@ public @interface OperatingSystem {
 		WINDOWS,
 		UNKNOWN;
 
-		private static final String OS_NAME = System.getProperty("os.name").toLowerCase();
+		private static final String OS_NAME = System.getProperty("os.name", "").toLowerCase();
 
 		public static Value current() {
 			if (OS_NAME.contains("linux")) {
