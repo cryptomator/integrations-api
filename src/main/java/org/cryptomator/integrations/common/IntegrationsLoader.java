@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.ServiceLoader;
+import java.util.stream.Stream;
 
 public class IntegrationsLoader {
 
@@ -17,12 +18,22 @@ public class IntegrationsLoader {
 	 * @return Highest priority service or empty if no supported service was found
 	 */
 	public static <T> Optional<T> load(Class<T> clazz) {
+		return loadAll(clazz).findFirst();
+	}
+
+	/**
+	 * Loads all suited services ordered by priority in descending order.
+	 *
+	 * @param clazz Service class
+	 * @param <T>   Type of the service
+	 * @return An ordered stream of all suited service candidates
+	 */
+	public static <T> Stream<T> loadAll(Class<T> clazz) {
 		return ServiceLoader.load(clazz)
 				.stream()
 				.filter(IntegrationsLoader::isSupportedOperatingSystem)
-				.sorted(Comparator.comparingInt(IntegrationsLoader::getPriority))
-				.map(ServiceLoader.Provider::get)
-				.findFirst();
+				.sorted(Comparator.comparingInt(IntegrationsLoader::getPriority).reversed())
+				.map(ServiceLoader.Provider::get);
 	}
 
 	private static int getPriority(ServiceLoader.Provider<?> provider) {

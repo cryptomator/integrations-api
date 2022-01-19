@@ -1,9 +1,17 @@
 package org.cryptomator.integrations.uiappearance;
 
+import org.cryptomator.integrations.common.IntegrationsLoader;
+
+import java.util.Optional;
+
 /**
  * This is the interface used by Cryptomator to get os specific UI appearances and themes.
  */
 public interface UiAppearanceProvider {
+
+	static Optional<UiAppearanceProvider> get() {
+		return IntegrationsLoader.load(UiAppearanceProvider.class);
+	}
 
 	/**
 	 * Gets the best-matching theme for the OS's current L&amp;F. This might be an approximation, as the OS might support more variations than we do.
