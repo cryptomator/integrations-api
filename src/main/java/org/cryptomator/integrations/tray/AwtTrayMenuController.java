@@ -1,11 +1,14 @@
 package org.cryptomator.integrations.tray;
 
 
+import org.cryptomator.integrations.common.Priority;
+
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+@Priority(Priority.FALLBACK)
 public class AwtTrayMenuController implements TrayMenuController {
 
 	private TrayIcon trayIcon;

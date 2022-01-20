@@ -1,10 +1,17 @@
 package org.cryptomator.integrations.tray;
 
+import org.cryptomator.integrations.common.IntegrationsLoader;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 public interface TrayMenuController {
+
+	static Optional<TrayMenuController> get() {
+		return IntegrationsLoader.load(TrayMenuController.class);
+	}
 
 	/**
 	 * Adds an icon to the system tray.
