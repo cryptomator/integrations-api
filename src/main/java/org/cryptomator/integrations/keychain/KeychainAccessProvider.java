@@ -1,9 +1,17 @@
 package org.cryptomator.integrations.keychain;
 
+import org.cryptomator.integrations.common.IntegrationsLoader;
+
+import java.util.stream.Stream;
+
 /**
  * This is the interface used by Cryptomator to store passwords securely in external keychains, such as system keychains or password managers.
  */
 public interface KeychainAccessProvider {
+
+	static Stream<KeychainAccessProvider> get() {
+		return IntegrationsLoader.loadAll(KeychainAccessProvider.class).filter(KeychainAccessProvider::isSupported);
+	}
 
 	/**
 	 * A name to display in UI elements. If required, this should be localized.
