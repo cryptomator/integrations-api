@@ -11,6 +11,8 @@ import java.lang.annotation.Target;
  * Integration Priority.
  * <p>
  * If multiple implementations for an integration can be provided, the provider with the highest priority will be used.
+ *
+ * @since 1.1.0
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

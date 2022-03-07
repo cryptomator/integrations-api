@@ -9,6 +9,12 @@ import java.util.stream.Stream;
  */
 public interface KeychainAccessProvider {
 
+	/**
+	 * Loads all available KeychainAccessProvider.
+	 *
+	 * @return a stream of {@link #isSupported() supported} KeychainAccessProviders
+	 * @since 1.1.0
+	 */
 	static Stream<KeychainAccessProvider> get() {
 		return IntegrationsLoader.loadAll(KeychainAccessProvider.class).filter(KeychainAccessProvider::isSupported);
 	}

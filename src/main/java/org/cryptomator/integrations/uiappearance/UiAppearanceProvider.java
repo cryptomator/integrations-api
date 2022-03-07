@@ -9,6 +9,12 @@ import java.util.Optional;
  */
 public interface UiAppearanceProvider {
 
+	/**
+	 * Loads the best-suited UiAppearanceProvider.
+	 *
+	 * @return preferred UiAppearanceProvider (if any)
+	 * @since 1.1.0
+	 */
 	static Optional<UiAppearanceProvider> get() {
 		return IntegrationsLoader.load(UiAppearanceProvider.class);
 	}

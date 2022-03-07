@@ -9,6 +9,8 @@ import java.lang.annotation.Target;
 
 /**
  * Restricts the annotated integration provider to one or more operating system(s).
+ *
+ * @since 1.1.0
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
