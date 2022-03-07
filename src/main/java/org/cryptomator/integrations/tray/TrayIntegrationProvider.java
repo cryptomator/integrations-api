@@ -4,8 +4,17 @@ import org.cryptomator.integrations.common.IntegrationsLoader;
 
 import java.util.Optional;
 
+/**
+ * Allows to perform OS-specific tasks when the app gets minimized to or restored from a tray icon.
+ */
 public interface TrayIntegrationProvider {
 
+	/**
+	 * Loads the best-suited TrayIntegrationProvider.
+	 *
+	 * @return preferred TrayIntegrationProvider (if any)
+	 * @since 1.1.0
+	 */
 	static Optional<TrayIntegrationProvider> get() {
 		return IntegrationsLoader.load(TrayIntegrationProvider.class);
 	}
