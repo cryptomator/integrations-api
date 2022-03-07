@@ -37,14 +37,23 @@
         </license>
     </licenses>
 
+	<dependencies>
+		<dependency>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<version>23.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.9.0</version>
                 <configuration>
-                    <release>11</release>
+                    <release>17</release>
                 </configuration>
             </plugin>
             <plugin>
@@ -72,7 +81,7 @@
                 </executions>
                 <configuration>
                     <quiet>true</quiet>
-                    <release>11</release>
+                    <release>17</release>
                     <tags>
                         <!-- workaround for "unknown tag: implNote", see https://blog.codefx.org/java/new-javadoc-tags/#Maven  -->
                         <tag>
@@ -110,7 +119,7 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.6</version>
+						<version>3.0.1</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -137,7 +146,7 @@
 				<repository>
 					<id>ossrh</id>
 					<name>Maven Central</name>
-					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+					<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 				</repository>
 			</distributionManagement>
 			<build>
@@ -149,7 +158,7 @@
 						<extensions>true</extensions>
 						<configuration>
 							<serverId>ossrh</serverId>
-							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
 							<autoReleaseAfterClose>true</autoReleaseAfterClose>
 						</configuration>
 					</plugin>

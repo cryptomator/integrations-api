@@ -1,15 +1,33 @@
 package org.cryptomator.integrations.keychain;
 
+import org.cryptomator.integrations.common.IntegrationsLoader;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Blocking;
+import org.jetbrains.annotations.Nls;
+
+import java.util.stream.Stream;
+
 /**
  * This is the interface used by Cryptomator to store passwords securely in external keychains, such as system keychains or password managers.
  */
 public interface KeychainAccessProvider {
 
 	/**
+	 * Loads all available KeychainAccessProvider.
+	 *
+	 * @return a stream of {@link #isSupported() supported} KeychainAccessProviders
+	 * @since 1.1.0
+	 */
+	static Stream<KeychainAccessProvider> get() {
+		return IntegrationsLoader.loadAll(KeychainAccessProvider.class).filter(KeychainAccessProvider::isSupported);
+	}
+
+	/**
 	 * A name to display in UI elements. If required, this should be localized.
 	 *
 	 * @return user-friendly name (must not be null or empty)
 	 */
+	@Nls(capitalization = Nls.Capitalization.Title)
 	String displayName();
 
 	/**
@@ -21,6 +39,7 @@ public interface KeychainAccessProvider {
 	 * @deprecated Please use {@link #storePassphrase(String, String, CharSequence)} instead
 	 */
 	@Deprecated
+	@ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
 	void storePassphrase(String key, CharSequence passphrase) throws KeychainAccessException;
 
 	/**
@@ -33,6 +52,7 @@ public interface KeychainAccessProvider {
 	 * @param passphrase  The secret to store in this keychain.
 	 * @throws KeychainAccessException If storing the password failed
 	 */
+	@Blocking
 	default void storePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException {
 		storePassphrase(key, passphrase);
 	}
@@ -42,6 +62,7 @@ public interface KeychainAccessProvider {
 	 * @return The stored passphrase for the given key or <code>null</code> if no value for the given key could be found.
 	 * @throws KeychainAccessException If loading the password failed
 	 */
+	@Blocking
 	char[] loadPassphrase(String key) throws KeychainAccessException;
 
 	/**
@@ -61,6 +82,7 @@ public interface KeychainAccessProvider {
 	 * @deprecated Please use {@link #changePassphrase(String, String, CharSequence)} instead
 	 */
 	@Deprecated
+	@ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
 	void changePassphrase(String key, CharSequence passphrase) throws KeychainAccessException;
 
 	/**
@@ -73,6 +95,7 @@ public interface KeychainAccessProvider {
 	 * @param passphrase  The secret to be updated in this keychain.
 	 * @throws KeychainAccessException If changing the password failed
 	 */
+	@Blocking
 	default void changePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException {
 		changePassphrase(key, passphrase);
 	}
