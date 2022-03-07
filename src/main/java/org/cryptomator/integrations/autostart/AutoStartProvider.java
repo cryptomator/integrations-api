@@ -1,6 +1,7 @@
 package org.cryptomator.integrations.autostart;
 
 import org.cryptomator.integrations.common.IntegrationsLoader;
+import org.jetbrains.annotations.Blocking;
 
 import java.util.Optional;
 
@@ -16,8 +17,10 @@ public interface AutoStartProvider {
 		return IntegrationsLoader.load(AutoStartProvider.class);
 	}
 
+	@Blocking
 	void enable() throws ToggleAutoStartFailedException;
 
+	@Blocking
 	void disable() throws ToggleAutoStartFailedException;
 
 	boolean isEnabled();

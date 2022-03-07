@@ -1,6 +1,7 @@
 package org.cryptomator.integrations.tray;
 
 import org.cryptomator.integrations.common.IntegrationsLoader;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +13,7 @@ import java.util.Optional;
  *
  * @since 1.1.0
  */
+@ApiStatus.Experimental
 public interface TrayMenuController {
 
 	static Optional<TrayMenuController> get() {
