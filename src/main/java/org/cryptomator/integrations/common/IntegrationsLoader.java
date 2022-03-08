@@ -8,6 +8,8 @@ import java.util.stream.Stream;
 
 public class IntegrationsLoader {
 
+	private IntegrationsLoader(){}
+
 	/**
 	 * Loads the best suited service, i.e. the one with the highest priority that is supported.
 	 * <p>
@@ -29,7 +31,7 @@ public class IntegrationsLoader {
 	 * @return An ordered stream of all suited service candidates
 	 */
 	public static <T> Stream<T> loadAll(Class<T> clazz) {
-		return ServiceLoader.load(clazz)
+		return ServiceLoader.load(clazz, ClassLoaderFactory.forPluginDir())
 				.stream()
 				.filter(IntegrationsLoader::isSupportedOperatingSystem)
 				.sorted(Comparator.comparingInt(IntegrationsLoader::getPriority).reversed())
