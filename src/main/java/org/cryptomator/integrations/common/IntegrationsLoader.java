@@ -1,5 +1,10 @@
 package org.cryptomator.integrations.common;
 
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.VisibleForTesting;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Optional;
@@ -8,7 +13,8 @@ import java.util.stream.Stream;
 
 public class IntegrationsLoader {
 
-	private IntegrationsLoader(){}
+	private IntegrationsLoader() {
+	}
 
 	/**
 	 * Loads the best suited service, i.e. the one with the highest priority that is supported.
@@ -34,8 +40,10 @@ public class IntegrationsLoader {
 		return ServiceLoader.load(clazz, ClassLoaderFactory.forPluginDir())
 				.stream()
 				.filter(IntegrationsLoader::isSupportedOperatingSystem)
+				.filter(IntegrationsLoader::passesStaticAvailabilityCheck)
 				.sorted(Comparator.comparingInt(IntegrationsLoader::getPriority).reversed())
-				.map(ServiceLoader.Provider::get);
+				.map(ServiceLoader.Provider::get)
+				.filter(IntegrationsLoader::passesInstanceAvailabilityCheck);
 	}
 
 	private static int getPriority(ServiceLoader.Provider<?> provider) {
@@ -46,6 +54,45 @@ public class IntegrationsLoader {
 	private static boolean isSupportedOperatingSystem(ServiceLoader.Provider<?> provider) {
 		var annotations = provider.type().getAnnotationsByType(OperatingSystem.class);
 		return annotations.length == 0 || Arrays.stream(annotations).anyMatch(OperatingSystem.Value::isCurrent);
+	}
+
+	private static boolean passesStaticAvailabilityCheck(ServiceLoader.Provider<?> provider) {
+		return passesStaticAvailabilityCheck(provider.type());
+	}
+
+	@VisibleForTesting
+	static boolean passesStaticAvailabilityCheck(Class<?> type) {
+		return passesAvailabilityCheck(type, null);
+	}
+
+	@VisibleForTesting
+	static boolean passesInstanceAvailabilityCheck(Object instance) {
+		return passesAvailabilityCheck(instance.getClass(), instance);
+	}
+
+	private static <T> boolean passesAvailabilityCheck(Class<? extends T> type, @Nullable T instance) {
+		if (!type.isAnnotationPresent(CheckAvailability.class)) {
+			return true; // if type is not annotated, skip tests
+		}
+		return Arrays.stream(type.getMethods())
+				.filter(m -> isAvailabilityCheck(m, instance == null))
+				.allMatch(m -> passesAvailabilityCheck(m, instance));
+	}
+
+	private static boolean passesAvailabilityCheck(Method m, @Nullable Object instance) {
+		assert Boolean.TYPE.equals(m.getReturnType());
+		try {
+			return (boolean) m.invoke(instance);
+		} catch (ReflectiveOperationException e) {
+			return false;
+		}
+	}
+
+	private static boolean isAvailabilityCheck(Method m, boolean isStatic) {
+		return m.isAnnotationPresent(CheckAvailability.class)
+				&& Boolean.TYPE.equals(m.getReturnType())
+				&& m.getParameterCount() == 0
+				&& Modifier.isStatic(m.getModifiers()) == isStatic;
 	}
 
 }
