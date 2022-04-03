@@ -2,6 +2,8 @@ package org.cryptomator.integrations.common;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.VisibleForTesting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -10,9 +12,12 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 class ClassLoaderFactory {
 
+	private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderFactory.class);
 	private static final String USER_HOME = System.getProperty("user.home");
 	private static final String PLUGIN_DIR_KEY = "cryptomator.pluginDir";
 	private static final String JAR_SUFFIX = ".jar";
@@ -38,7 +43,12 @@ class ClassLoaderFactory {
 	@VisibleForTesting
 	@Contract(value = "_ -> new", pure = true)
 	static URLClassLoader forPluginDirWithPath(Path path) throws UncheckedIOException {
-		return URLClassLoader.newInstance(findJars(path));
+		var jars = findJars(path);
+		if (LOG.isDebugEnabled()) {
+			String jarList = Arrays.stream(jars).map(URL::getPath).collect(Collectors.joining(", "));
+			LOG.debug("Found jars in cryptomator.pluginDir: {}", jarList);
+		}
+		return URLClassLoader.newInstance(jars);
 	}
 
 	@VisibleForTesting

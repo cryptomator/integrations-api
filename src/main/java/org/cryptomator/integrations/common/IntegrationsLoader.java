@@ -2,6 +2,8 @@ package org.cryptomator.integrations.common;
 
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -12,6 +14,8 @@ import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
 public class IntegrationsLoader {
+
+	private static final Logger LOG = LoggerFactory.getLogger(IntegrationsLoader.class);
 
 	private IntegrationsLoader() {
 	}
@@ -39,11 +43,19 @@ public class IntegrationsLoader {
 	public static <T> Stream<T> loadAll(Class<T> clazz) {
 		return ServiceLoader.load(clazz, ClassLoaderFactory.forPluginDir())
 				.stream()
+				.peek(service -> logFoundService(clazz, service.type()))
 				.filter(IntegrationsLoader::isSupportedOperatingSystem)
 				.filter(IntegrationsLoader::passesStaticAvailabilityCheck)
 				.sorted(Comparator.comparingInt(IntegrationsLoader::getPriority).reversed())
 				.map(ServiceLoader.Provider::get)
-				.filter(IntegrationsLoader::passesInstanceAvailabilityCheck);
+				.filter(IntegrationsLoader::passesInstanceAvailabilityCheck)
+				.peek(impl -> logServiceIsAvailable(clazz, impl.getClass()));
+	}
+
+	private static void logFoundService(Class<?> apiType, Class<?> implType) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("{}: Found implementation: {} in jar {}", apiType.getSimpleName(), implType.getName(), implType.getProtectionDomain().getCodeSource().getLocation().getPath());
+		}
 	}
 
 	private static int getPriority(ServiceLoader.Provider<?> provider) {
@@ -70,9 +82,19 @@ public class IntegrationsLoader {
 		return passesAvailabilityCheck(instance.getClass(), instance);
 	}
 
+	private static void logServiceIsAvailable(Class<?> apiType, Class<?> implType) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("{}: Implementation is available: {}", apiType.getSimpleName(), implType.getName());
+		}
+	}
+
 	private static <T> boolean passesAvailabilityCheck(Class<? extends T> type, @Nullable T instance) {
 		if (!type.isAnnotationPresent(CheckAvailability.class)) {
 			return true; // if type is not annotated, skip tests
+		}
+		if (!type.getModule().isExported(type.getPackageName(), IntegrationsLoader.class.getModule())) {
+			LOG.error("Can't run @CheckAvailability tests for class {}. Make sure to export {} to {}!", type.getName(), type.getPackageName(), IntegrationsLoader.class.getPackageName());
+			return false;
 		}
 		return Arrays.stream(type.getMethods())
 				.filter(m -> isAvailabilityCheck(m, instance == null))
@@ -84,6 +106,7 @@ public class IntegrationsLoader {
 		try {
 			return (boolean) m.invoke(instance);
 		} catch (ReflectiveOperationException e) {
+			LOG.warn("Failed to invoke @CheckAvailability test {}#{}", m.getDeclaringClass(), m.getName(), e);
 			return false;
 		}
 	}
