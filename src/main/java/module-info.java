@@ -7,6 +7,7 @@ import org.cryptomator.integrations.uiappearance.UiAppearanceProvider;
 
 module org.cryptomator.integrations.api {
 	requires static org.jetbrains.annotations;
+	requires org.slf4j;
 
 	exports org.cryptomator.integrations.autostart;
 	exports org.cryptomator.integrations.common;
