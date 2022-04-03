@@ -93,7 +93,7 @@ public class IntegrationsLoader {
 			return true; // if type is not annotated, skip tests
 		}
 		if (!type.getModule().isExported(type.getPackageName(), IntegrationsLoader.class.getModule())) {
-			LOG.warn("Can't run @CheckAvailability tests for class {}. Make sure to export {} to {}!", type.getName(), type.getPackageName(), IntegrationsLoader.class.getPackageName());
+			LOG.error("Can't run @CheckAvailability tests for class {}. Make sure to export {} to {}!", type.getName(), type.getPackageName(), IntegrationsLoader.class.getPackageName());
 			return false;
 		}
 		return Arrays.stream(type.getMethods())
