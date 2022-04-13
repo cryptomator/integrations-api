@@ -40,7 +40,9 @@ public interface KeychainAccessProvider {
 	 */
 	@Deprecated
 	@ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
-	void storePassphrase(String key, CharSequence passphrase) throws KeychainAccessException;
+	default void storePassphrase(String key, CharSequence passphrase) throws KeychainAccessException {
+		storePassphrase(key, null, passphrase);
+	}
 
 	/**
 	 * Associates a passphrase with a given key and a name for that key.
@@ -53,9 +55,7 @@ public interface KeychainAccessProvider {
 	 * @throws KeychainAccessException If storing the password failed
 	 */
 	@Blocking
-	default void storePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException {
-		storePassphrase(key, passphrase);
-	}
+	void storePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException;
 
 	/**
 	 * @param key Unique key previously used while {@link #storePassphrase(String, CharSequence) storing a passphrase}.
@@ -83,7 +83,9 @@ public interface KeychainAccessProvider {
 	 */
 	@Deprecated
 	@ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
-	void changePassphrase(String key, CharSequence passphrase) throws KeychainAccessException;
+	default void changePassphrase(String key, CharSequence passphrase) throws KeychainAccessException {
+		changePassphrase(key, null, passphrase);
+	}
 
 	/**
 	 * Updates a passphrase with a given key and stores a name for that key. Noop, if there is no item for the given key.
@@ -96,9 +98,7 @@ public interface KeychainAccessProvider {
 	 * @throws KeychainAccessException If changing the password failed
 	 */
 	@Blocking
-	default void changePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException {
-		changePassphrase(key, passphrase);
-	}
+	void changePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException;
 
 	/**
 	 * @return <code>true</code> if this KeychainAccessIntegration works on the current machine.
