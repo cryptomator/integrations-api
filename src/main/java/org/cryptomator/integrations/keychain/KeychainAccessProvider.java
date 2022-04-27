@@ -4,6 +4,7 @@ import org.cryptomator.integrations.common.IntegrationsLoader;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Blocking;
 import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
@@ -55,10 +56,10 @@ public interface KeychainAccessProvider {
 	 * @throws KeychainAccessException If storing the password failed
 	 */
 	@Blocking
-	void storePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException;
+	void storePassphrase(String key, @Nullable String displayName, CharSequence passphrase) throws KeychainAccessException;
 
 	/**
-	 * @param key Unique key previously used while {@link #storePassphrase(String, CharSequence) storing a passphrase}.
+	 * @param key Unique key previously used while {@link #storePassphrase(String, String, CharSequence)}  storing a passphrase}.
 	 * @return The stored passphrase for the given key or <code>null</code> if no value for the given key could be found.
 	 * @throws KeychainAccessException If loading the password failed
 	 */
@@ -68,7 +69,7 @@ public interface KeychainAccessProvider {
 	/**
 	 * Deletes a passphrase with a given key.
 	 *
-	 * @param key Unique key previously used while {@link #storePassphrase(String, CharSequence) storing a passphrase}.
+	 * @param key Unique key previously used while {@link #storePassphrase(String, String, CharSequence)}  storing a passphrase}.
 	 * @throws KeychainAccessException If deleting the password failed
 	 */
 	void deletePassphrase(String key) throws KeychainAccessException;
@@ -76,7 +77,7 @@ public interface KeychainAccessProvider {
 	/**
 	 * Updates a passphrase with a given key. Noop, if there is no item for the given key.
 	 *
-	 * @param key        Unique key previously used while {@link #storePassphrase(String, CharSequence) storing a passphrase}.
+	 * @param key        Unique key previously used while {@link #storePassphrase(String, String, CharSequence)}  storing a passphrase}.
 	 * @param passphrase The secret to be updated in this keychain.
 	 * @throws KeychainAccessException If changing the password failed
 	 * @deprecated Please use {@link #changePassphrase(String, String, CharSequence)} instead
@@ -90,7 +91,7 @@ public interface KeychainAccessProvider {
 	/**
 	 * Updates a passphrase with a given key and stores a name for that key. Noop, if there is no item for the given key.
 	 *
-	 * @param key         Unique key previously used while {@link #storePassphrase(String, CharSequence) storing a passphrase}.
+	 * @param key         Unique key previously used while {@link #storePassphrase(String, String, CharSequence)}  storing a passphrase}.
 	 * @param displayName The according name to the key. That's the name of the vault displayed in the UI.
 	 *                    It's passed to the keychain as an additional information about the vault besides the key.
 	 *                    The parameter does not need to be unique or be checked by the keychain.
@@ -98,7 +99,7 @@ public interface KeychainAccessProvider {
 	 * @throws KeychainAccessException If changing the password failed
 	 */
 	@Blocking
-	void changePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException;
+	void changePassphrase(String key, @Nullable String displayName, CharSequence passphrase) throws KeychainAccessException;
 
 	/**
 	 * @return <code>true</code> if this KeychainAccessIntegration works on the current machine.
