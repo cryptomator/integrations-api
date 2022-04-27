@@ -4,6 +4,7 @@ import org.cryptomator.integrations.common.IntegrationsLoader;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Blocking;
 import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
@@ -55,7 +56,7 @@ public interface KeychainAccessProvider {
 	 * @throws KeychainAccessException If storing the password failed
 	 */
 	@Blocking
-	void storePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException;
+	void storePassphrase(String key, @Nullable String displayName, CharSequence passphrase) throws KeychainAccessException;
 
 	/**
 	 * @param key Unique key previously used while {@link #storePassphrase(String, String, CharSequence)}  storing a passphrase}.
@@ -98,7 +99,7 @@ public interface KeychainAccessProvider {
 	 * @throws KeychainAccessException If changing the password failed
 	 */
 	@Blocking
-	void changePassphrase(String key, String displayName, CharSequence passphrase) throws KeychainAccessException;
+	void changePassphrase(String key, @Nullable String displayName, CharSequence passphrase) throws KeychainAccessException;
 
 	/**
 	 * @return <code>true</code> if this KeychainAccessIntegration works on the current machine.
