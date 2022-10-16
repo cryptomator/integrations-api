@@ -40,4 +40,6 @@ public interface TrayMenuController {
 	 */
 	void updateTrayMenu(List<TrayMenuItem> items) throws TrayMenuException;
 
+	void onBeforeShow(Runnable listener);
+
 }
