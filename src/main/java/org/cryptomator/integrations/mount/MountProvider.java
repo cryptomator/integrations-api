@@ -25,6 +25,16 @@ public interface MountProvider {
 
 	MountBuilder forPath(Path vfsRoot);
 
+	default String getDefaultMountPoint() {
+		throw new UnsupportedOperationException();
+	}
+
+	default String getDefaultMountFlags() {
+		throw new UnsupportedOperationException();
+	}
+
+	;
+
 	interface MountedVolume extends AutoCloseable {
 
 		//TODO: either this or reveal method, not both
@@ -34,6 +44,10 @@ public interface MountProvider {
 		void reveal(Consumer<Path> cmd);
 
 		void unmout() throws UnmountFailedException;
+
+		default void unmountForced() throws UnmountFailedException {
+			throw new UnsupportedOperationException();
+		}
 
 		default void close() throws UnmountFailedException {
 			unmout();
@@ -45,26 +59,41 @@ public interface MountProvider {
 		CUSTOM_FLAGS,
 		MOUNT_POINT_EMPTY_DIR,
 		MOUNT_POINT_DRIVE_LETTER,
+		MOUNT_POINT_PATH_PREFIX,
 		READ_ONLY,
-		FORCED_UNMOUNT,
+		UNMOUNT_FORCED,
 		ON_EXIT_ACTION,
-		PORT
+		PORT,
+		DEFAULT_MOUNT_POINT,
+		DEFAULT_MOUNT_FLAGS
 	}
 
 	Set<Features> supportedFeatures();
 
-	//TODO: if not supported No-op or throw?
-	// no-op better for unified code (just load off all shiat into the builder and see what the result is)
-	// does not hold for invalid input
+	/**
+	 * Builder to mount a virtual filesystem.
+	 * <p>
+	 * The setter may validate the input, but no guarantee is given that the final mount option does not fail due to invalid input.
+	 * This holds especially for {@link this#setMountFlags(String)};
+	 */
 	interface MountBuilder {
 
-		MountBuilder setMountpoint(Path p); //TODO: Idea: every setter verifies the set and can throw an IllegalArgumentException
+		//TODO: Idea: every setter verifies the set and can throw an IllegalArgumentException
+		default MountBuilder setMountpoint(Path p) {
+			throw new UnsupportedOperationException();
+		}
 
-		MountBuilder setOnExitAction(Consumer<Throwable> onExitAction);
+		default MountBuilder setOnExitAction(Consumer<Throwable> onExitAction) {
+			throw new UnsupportedOperationException();
+		}
 
-		MountBuilder setCustomFlags(String customFlags);
+		default MountBuilder setMountFlags(String mountFlags) {
+			throw new UnsupportedOperationException();
+		}
 
-		MountBuilder setReadOnly(boolean mountReadOnly);
+		default MountBuilder setReadOnly(boolean mountReadOnly) {
+			throw new UnsupportedOperationException();
+		}
 
 		MountedVolume mount() throws MountFailedException;
 
