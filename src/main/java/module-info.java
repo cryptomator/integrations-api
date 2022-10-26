@@ -1,4 +1,4 @@
-import org.cryptomator.integrations.mount.FilesystemMountProvider;
+import org.cryptomator.integrations.mount.MountProvider;
 import org.cryptomator.integrations.tray.TrayMenuController;
 import org.cryptomator.integrations.autostart.AutoStartProvider;
 import org.cryptomator.integrations.keychain.KeychainAccessProvider;
@@ -19,7 +19,7 @@ module org.cryptomator.integrations.api {
 
 	uses AutoStartProvider;
 	uses KeychainAccessProvider;
-	uses FilesystemMountProvider;
+	uses MountProvider;
 	uses TrayIntegrationProvider;
 	uses TrayMenuController;
 	uses UiAppearanceProvider;
