@@ -1,0 +1,13 @@
+package org.cryptomator.integrations.mount;
+
+public enum MountFeature {
+	MOUNT_FLAGS,
+	MOUNT_POINT_EMPTY_DIR,
+	MOUNT_POINT_DRIVE_LETTER,
+	MOUNT_POINT_PATH_PREFIX,
+	READ_ONLY,
+	UNMOUNT_FORCED,
+	ON_EXIT_ACTION,
+	PORT,
+	DEFAULT_MOUNT_POINT
+}
