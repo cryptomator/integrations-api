@@ -43,6 +43,15 @@ public interface MountProvider {
 		//TODO: is this needed? why not just let the consumer reveal?
 		void reveal(Consumer<Path> cmd);
 
+		/**
+		 * Unmounts the mounted Volume.
+		 * <p>
+		 * The unmount procedure should be as gracefule as possible.
+		 * If the volume supports a forceful unmount, see {@link MountedVolume#unmountForced()} can be used.
+		 * The most harsh unmount happens by using {@link MountedVolume#close()}.
+		 *
+		 * @throws UnmountFailedException If the unmount was not successful.
+		 */
 		void unmout() throws UnmountFailedException;
 
 		default void unmountForced() throws UnmountFailedException {
@@ -74,7 +83,7 @@ public interface MountProvider {
 	 * Builder to mount a virtual filesystem.
 	 * <p>
 	 * The setter may validate the input, but no guarantee is given that the final mount option does not fail due to invalid input.
-	 * This holds especially for {@link this#setMountFlags(String)};
+	 * This holds especially for {@link MountBuilder#setMountFlags(String)};
 	 */
 	interface MountBuilder {
 
