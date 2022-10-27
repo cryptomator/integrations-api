@@ -60,7 +60,8 @@ public interface MountProvider {
 	 * A suitable mount point suggested by this provider.
 	 * <p>
 	 * Other than caller-provided mount points, the mount point suggested by this method can be
-	 * passed to {@link MountBuilder#setMountpoint(Path)} without further ado.
+	 * passed to {@link MountBuilder#setMountpoint(Path)} and is guaranteed to fulfill the builder's requirements
+	 * without further ado.
 	 *
 	 * @param mountPointSuffix String used in the generation of a mount point.
 	 * @return A path to a possible mount point.
