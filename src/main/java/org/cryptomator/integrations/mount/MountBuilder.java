@@ -21,13 +21,10 @@ public interface MountBuilder {
 	 *
 	 * @param mountPoint Where to mount the volume
 	 * @return <code>this</code>
-	 * @throws UnsupportedOperationException If {@link MountFeature#MOUNT_POINT_EMPTY_DIR} is not supported // TODO: what MOUNT_POINT_* features do we really need?
 	 * @see MountProvider#getDefaultMountPoint(String)
 	 */
 	@Contract("_ -> this")
-	default MountBuilder setMountpoint(Path mountPoint) {
-		throw new UnsupportedOperationException();
-	}
+	MountBuilder setMountpoint(Path mountPoint);
 
 	// TODO: in what legacy mounter impl is this used?
 	@Contract("_ -> this")
