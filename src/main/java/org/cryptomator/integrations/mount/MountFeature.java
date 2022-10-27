@@ -57,11 +57,6 @@ public enum MountFeature {
 	UNMOUNT_FORCED,
 
 	/**
-	 * The mount supports triggering an event handler, which is somehow triggered at a specific time. // TODO what?
-	 */
-	ON_EXIT_ACTION,
-
-	/**
 	 * The provider supports {@link MountProvider#getDefaultPort()}
 	 * and the builder requires {@link MountBuilder#setPort(int)}.
 	 */

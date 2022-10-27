@@ -4,7 +4,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Range;
 
 import java.nio.file.Path;
-import java.util.function.Consumer;
 
 /**
  * Builder to mount a filesystem.
@@ -13,8 +12,6 @@ import java.util.function.Consumer;
  * This holds especially for {@link MountBuilder#setMountFlags(String)};
  */
 public interface MountBuilder {
-
-	//TODO: Idea: every setter verifies the set and can throw an IllegalArgumentException
 
 	/**
 	 * Sets the mount point.
@@ -25,12 +22,6 @@ public interface MountBuilder {
 	 */
 	@Contract("_ -> this")
 	MountBuilder setMountpoint(Path mountPoint);
-
-	// TODO: in what legacy mounter impl is this used?
-	@Contract("_ -> this")
-	default MountBuilder setOnExitAction(Consumer<Throwable> onExitAction) {
-		throw new UnsupportedOperationException();
-	}
 
 	/**
 	 * Sets mount flags.

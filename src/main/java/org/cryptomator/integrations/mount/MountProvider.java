@@ -9,22 +9,6 @@ import java.nio.file.Path;
 import java.util.Set;
 import java.util.stream.Stream;
 
-// Vorteile:
-//  * IoC: Ein Provider weiß was er kann und was nicht!
-//  * Wegfall der komplizierten Mountpoint Logik
-//  * App beschränkt sich mehr auf GUI und Logik darum
-//  * Einfaches ändern/entfernen eines Providers
-//  * Mounten ist eine Systemintegration!
-//  * Tests!?
-//  * Illegal Mount Options Check?
-//  * In der GUI sieht der Nutzer sofort, was sich ändert.
-// Nachteile:
-//  * Code-Duplikation
-//  * WebDAV-ServerPort? (-> Legacy Option in Preferences?)
-// Ungeklärt:
-//  * Anzeigen von Fehler dem User (-> Translations nutzbar?)
-//  * Langfristiger Wechsel zu eigenständigen Prozessen?
-
 /**
  * A mechanism to mount a file system.
  *

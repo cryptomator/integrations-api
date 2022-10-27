@@ -1,7 +1,6 @@
 package org.cryptomator.integrations.mount;
 
 import java.nio.file.Path;
-import java.util.function.Consumer;
 
 /**
  * Handle to control the lifecycle of a mounted file system.
@@ -10,12 +9,12 @@ import java.util.function.Consumer;
  */
 public interface Mount extends AutoCloseable {
 
-	//TODO: either this or reveal method, not both
-	Path getAccessPoint();
-
-	//TODO: is this needed? why not just let the consumer reveal?
-	// See WebDAV: LinuxGioMounter and LinuxGvfsMounter -> no path, just a command
-	void reveal(Consumer<Path> cmd);
+	/**
+	 * Returns the absolute OS path, where this mount can be accessed.
+	 *
+	 * @return Absolute path to the mountpoint.
+	 */
+	Path getMountpoint();
 
 	/**
 	 * Unmounts the mounted Volume.
