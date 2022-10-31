@@ -24,7 +24,7 @@ public interface Mount extends AutoCloseable {
 	 * @throws UnmountFailedException If the unmount was not successful.
 	 * @see #unmountForced()
 	 */
-	void unmout() throws UnmountFailedException;
+	void unmount() throws UnmountFailedException;
 
 	/**
 	 * If supported, force-unmount the volume.
@@ -37,7 +37,7 @@ public interface Mount extends AutoCloseable {
 	}
 
 	default void close() throws UnmountFailedException {
-		unmout();
+		unmount();
 	}
 
 
