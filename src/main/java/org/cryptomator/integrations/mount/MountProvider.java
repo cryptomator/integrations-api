@@ -41,21 +41,6 @@ public interface MountProvider {
 	boolean isSupported();
 
 	/**
-	 * A suitable mount point suggested by this provider.
-	 * <p>
-	 * Other than caller-provided mount points, the mount point suggested by this method can be
-	 * passed to {@link MountBuilder#setMountpoint(Path)} and is guaranteed to fulfill the builder's requirements
-	 * without further ado.
-	 *
-	 * @param mountPointSuffix String used in the generation of a mount point.
-	 * @return A path to a possible mount point.
-	 * @throws UnsupportedOperationException If {@link MountFeature#DEFAULT_MOUNT_POINT} is not supported
-	 */
-	default Path getDefaultMountPoint(String mountPointSuffix) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * Default mount flags. May be empty.
 	 *
 	 * @param mountName Name of the mount in the OS
@@ -83,6 +68,16 @@ public interface MountProvider {
 	 * @return Set of supported {@link MountFeature}s
 	 */
 	Set<MountFeature> supportedFeatures();
+
+	/**
+	 * Tests whether this provider supports the given feature.
+	 *
+	 * @param feature The feature
+	 * @return {@code true} if supported
+	 */
+	default boolean supportsFeature(MountFeature feature) {
+		return supportedFeatures().contains(feature);
+	}
 
 
 	/**

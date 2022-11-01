@@ -1,5 +1,7 @@
 package org.cryptomator.integrations.mount;
 
+import java.nio.file.Path;
+
 /**
  * Describes what aspects of the mount implementation can or should be used.
  * <p>
@@ -17,7 +19,7 @@ public enum MountFeature {
 	 * <p>
 	 * This option is mutually exclusive with {@link #MOUNT_WITHIN_EXISTING_PARENT}.
 	 *
-	 * @see #DEFAULT_MOUNT_POINT
+	 * @see #MOUNT_TO_SYSTEM_CHOSEN_PATH
 	 */
 	MOUNT_TO_EXISTING_DIR,
 
@@ -27,7 +29,7 @@ public enum MountFeature {
 	 * <p>
 	 * This option is mutually exclusive with {@link #MOUNT_TO_EXISTING_DIR}.
 	 *
-	 * @see #DEFAULT_MOUNT_POINT
+	 * @see #MOUNT_TO_SYSTEM_CHOSEN_PATH
 	 */
 	MOUNT_WITHIN_EXISTING_PARENT,
 
@@ -36,18 +38,23 @@ public enum MountFeature {
 	 *
 	 * @see #MOUNT_TO_EXISTING_DIR
 	 * @see #MOUNT_WITHIN_EXISTING_PARENT
+	 * @see #MOUNT_TO_SYSTEM_CHOSEN_PATH
 	 */
 	MOUNT_AS_DRIVE_LETTER,
 
 	/**
-	 * The provider supports suggesting a default mount point via {@link MountProvider#getDefaultMountPoint(String)}.
-	 * <p>
-	 * The default mount point is guaranteed to be supported by the mount builder, regardless of its normal restrictions.
+	 * The provider supports suggesting a default mount point, if no mount point is set via {@link MountBuilder#setMountpoint(Path)}.
 	 */
-	DEFAULT_MOUNT_POINT,
+	MOUNT_TO_SYSTEM_CHOSEN_PATH,
 
 	/**
-	 * The builder supports {@link MountBuilder#setReadOnly(boolean)}
+	 * The provider supports {@link MountProvider#getDefaultPort()}
+	 * and the builder requires {@link MountBuilder#setPort(int)}.
+	 */
+	PORT,
+
+	/**
+	 * The builder supports {@link MountBuilder#setReadOnly(boolean)}.
 	 */
 	READ_ONLY,
 
@@ -57,8 +64,7 @@ public enum MountFeature {
 	UNMOUNT_FORCED,
 
 	/**
-	 * The provider supports {@link MountProvider#getDefaultPort()}
-	 * and the builder requires {@link MountBuilder#setPort(int)}.
+	 * The builder requires {@link MountBuilder#setVolumeId(String)}.
 	 */
-	PORT
+	VOLUME_ID
 }

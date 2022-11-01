@@ -15,13 +15,16 @@ public interface MountBuilder {
 
 	/**
 	 * Sets the mount point.
+	 * <p>
+	 * Unless the mount provide supports {@link MountFeature#MOUNT_TO_SYSTEM_CHOSEN_PATH}, setting a mount point is required.
 	 *
 	 * @param mountPoint Where to mount the volume
 	 * @return <code>this</code>
-	 * @see MountProvider#getDefaultMountPoint(String)
 	 */
 	@Contract("_ -> this")
-	MountBuilder setMountpoint(Path mountPoint);
+	default MountBuilder setMountpoint(Path mountPoint) {
+		throw new UnsupportedOperationException();
+	}
 
 	/**
 	 * Sets mount flags.
@@ -33,6 +36,18 @@ public interface MountBuilder {
 	 */
 	@Contract("_ -> this")
 	default MountBuilder setMountFlags(String mountFlags) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Use the given TCP port.
+	 *
+	 * @param port Fixed TCP port or 0 to use a system-assigned port
+	 * @return <code>this</code>
+	 * @throws UnsupportedOperationException If {@link MountFeature#PORT} is not supported
+	 */
+	@Contract("_ -> this")
+	default MountBuilder setPort(@Range(from = 0, to = Short.MAX_VALUE) int port) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -49,17 +64,16 @@ public interface MountBuilder {
 	}
 
 	/**
-	 * Use the given TCP port.
+	 * Sets a unique volume id.
 	 *
-	 * @param port fixed TCP port or 0 to use a system-assigned port
+	 * @param volumeId Volume id
 	 * @return <code>this</code>
-	 * @throws UnsupportedOperationException If {@link MountFeature#PORT} is not supported
+	 * @throws UnsupportedOperationException If {@link MountFeature#VOLUME_ID} is not supported
 	 */
 	@Contract("_ -> this")
-	default MountBuilder setPort(@Range(from = 0, to = Short.MAX_VALUE) int port) {
+	default MountBuilder setVolumeId(String volumeId) {
 		throw new UnsupportedOperationException();
 	}
-
 
 	/**
 	 * Mounts the file system.
