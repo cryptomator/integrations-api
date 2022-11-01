@@ -40,6 +40,16 @@ public interface TrayMenuController {
 	 */
 	void updateTrayMenu(List<TrayMenuItem> items) throws TrayMenuException;
 
-	void onBeforeShow(Runnable listener);
+	/**
+	 * Action to run before the tray menu opens.
+	 * <p>
+	 * This method is used to set up an event listener for when the menu is opened,
+	 * e.g. so that the vault list can be updated to reflect volume mount state changes
+	 * which occur while Cryptomator is in the system tray (and not open).
+	 *
+	 * @param listener
+	 * @throws IllegalStateException thrown when adding listeners fails (i.e. there's no tray menu)
+	 */
+	void onBeforeOpenMenu(Runnable listener);
 
 }
