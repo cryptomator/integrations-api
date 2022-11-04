@@ -2,7 +2,6 @@ package org.cryptomator.integrations.mount;
 
 import org.cryptomator.integrations.common.IntegrationsLoader;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
 import java.nio.file.Path;
@@ -52,13 +51,13 @@ public interface MountProvider {
 	}
 
 	/**
-	 * The default TCP port used by this provider.
+	 * The default TCP port of the loopback address used by this provider.
 	 *
 	 * @return fixed TCP port or 0 to use a system-assigned port
-	 * @throws UnsupportedOperationException If {@link MountFeature#PORT} is not supported
+	 * @throws UnsupportedOperationException If {@link MountFeature#LOOPBACK_PORT} is not supported
 	 */
 	@Range(from = 0, to = Short.MAX_VALUE)
-	default int getDefaultPort() {
+	default int getDefaultLoopbackPort() {
 		throw new UnsupportedOperationException();
 	}
 

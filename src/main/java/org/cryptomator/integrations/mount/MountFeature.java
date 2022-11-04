@@ -9,6 +9,12 @@ import java.nio.file.Path;
  */
 public enum MountFeature {
 	/**
+	 * The provider supports {@link MountProvider#getDefaultLoopbackPort()}
+	 * and the builder requires {@link MountBuilder#setLoopbackPort(int)}.
+	 */
+	LOOPBACK_PORT,
+
+	/**
 	 * The provider supports {@link MountProvider#getDefaultMountFlags(String)}
 	 * and the builder requires {@link MountBuilder#setMountFlags(String)}.
 	 */
@@ -46,12 +52,6 @@ public enum MountFeature {
 	 * The provider supports suggesting a default mount point, if no mount point is set via {@link MountBuilder#setMountpoint(Path)}.
 	 */
 	MOUNT_TO_SYSTEM_CHOSEN_PATH,
-
-	/**
-	 * The provider supports {@link MountProvider#getDefaultPort()}
-	 * and the builder requires {@link MountBuilder#setPort(int)}.
-	 */
-	PORT,
 
 	/**
 	 * The builder supports {@link MountBuilder#setReadOnly(boolean)}.

@@ -14,6 +14,18 @@ import java.nio.file.Path;
 public interface MountBuilder {
 
 	/**
+	 * Use the given TCP port of the loopback address.
+	 *
+	 * @param port Fixed TCP port or 0 to use a system-assigned port
+	 * @return <code>this</code>
+	 * @throws UnsupportedOperationException If {@link MountFeature#LOOPBACK_PORT} is not supported
+	 */
+	@Contract("_ -> this")
+	default MountBuilder setLoopbackPort(@Range(from = 0, to = Short.MAX_VALUE) int port) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * Sets the mount point.
 	 * <p>
 	 * Unless the mount provide supports {@link MountFeature#MOUNT_TO_SYSTEM_CHOSEN_PATH}, setting a mount point is required.
@@ -39,17 +51,6 @@ public interface MountBuilder {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * Use the given TCP port.
-	 *
-	 * @param port Fixed TCP port or 0 to use a system-assigned port
-	 * @return <code>this</code>
-	 * @throws UnsupportedOperationException If {@link MountFeature#PORT} is not supported
-	 */
-	@Contract("_ -> this")
-	default MountBuilder setPort(@Range(from = 0, to = Short.MAX_VALUE) int port) {
-		throw new UnsupportedOperationException();
-	}
 
 	/**
 	 * Instructs the mount to be read-only.
