@@ -79,7 +79,7 @@ public interface MountBuilder {
 	/**
 	 * Sets a unique volume id.
 	 *
-	 * @param volumeId Volume id
+	 * @param volumeId String conforming with the os-dependent path component restrictions
 	 * @return <code>this</code>
 	 * @throws UnsupportedOperationException If {@link MountFeature#VOLUME_ID} is not supported
 	 */
