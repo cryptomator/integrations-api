@@ -56,7 +56,7 @@ public interface MountBuilder {
 	 * @param mountFlags Mount flags
 	 * @return <code>this</code>
 	 * @throws UnsupportedOperationException If {@link MountFeature#MOUNT_FLAGS} is not supported
-	 * @see MountProvider#getDefaultMountFlags(String)
+	 * @see MountService#getDefaultMountFlags(String)
 	 */
 	@Contract("_ -> this")
 	default MountBuilder setMountFlags(String mountFlags) {

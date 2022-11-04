@@ -14,13 +14,13 @@ public enum MountFeature {
 	LOOPBACK_HOST_NAME,
 
 	/**
-	 * The provider supports {@link MountProvider#getDefaultLoopbackPort()}
+	 * The provider supports {@link MountService#getDefaultLoopbackPort()}
 	 * and the builder requires {@link MountBuilder#setLoopbackPort(int)}.
 	 */
 	LOOPBACK_PORT,
 
 	/**
-	 * The provider supports {@link MountProvider#getDefaultMountFlags(String)}
+	 * The provider supports {@link MountService#getDefaultMountFlags(String)}
 	 * and the builder requires {@link MountBuilder#setMountFlags(String)}.
 	 */
 	MOUNT_FLAGS,

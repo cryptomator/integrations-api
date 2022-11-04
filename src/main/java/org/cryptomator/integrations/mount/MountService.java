@@ -13,15 +13,15 @@ import java.util.stream.Stream;
  *
  * @since 1.2.0
  */
-public interface MountProvider {
+public interface MountService {
 
 	/**
 	 * Loads all supported mount providers.
 	 *
 	 * @return Stream of supported MountProviders (may be empty)
 	 */
-	static Stream<MountProvider> get() {
-		return IntegrationsLoader.loadAll(MountProvider.class).filter(MountProvider::isSupported);
+	static Stream<MountService> get() {
+		return IntegrationsLoader.loadAll(MountService.class).filter(MountService::isSupported);
 	}
 
 	/**
