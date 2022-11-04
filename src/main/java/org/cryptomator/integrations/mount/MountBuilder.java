@@ -14,6 +14,18 @@ import java.nio.file.Path;
 public interface MountBuilder {
 
 	/**
+	 * Use the given host name as the loopback address.
+	 *
+	 * @param hostName string conforming with the uri host part
+	 * @return <code>this</code>
+	 * @throws UnsupportedOperationException If {@link MountFeature#LOOPBACK_HOST_NAME} is not supported
+	 */
+	@Contract("_ -> this")
+	default MountBuilder setLoopbackHostName(String hostName) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * Use the given TCP port of the loopback address.
 	 *
 	 * @param port Fixed TCP port or 0 to use a system-assigned port

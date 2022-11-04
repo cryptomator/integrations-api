@@ -9,6 +9,11 @@ import java.nio.file.Path;
  */
 public enum MountFeature {
 	/**
+	 * The builder supports {@link MountBuilder#setLoopbackHostName(String)}.
+	 */
+	LOOPBACK_HOST_NAME,
+
+	/**
 	 * The provider supports {@link MountProvider#getDefaultLoopbackPort()}
 	 * and the builder requires {@link MountBuilder#setLoopbackPort(int)}.
 	 */
