@@ -62,20 +62,20 @@ public interface MountService {
 	}
 
 	/**
-	 * Mount features supported by this provider.
+	 * Mount capabilites supported by this provider.
 	 *
 	 * @return Set of supported {@link MountCapability}s
 	 */
-	Set<MountCapability> supportedFeatures();
+	Set<MountCapability> capabilities();
 
 	/**
-	 * Tests whether this provider supports the given feature.
+	 * Tests whether this provider supports the given capability.
 	 *
-	 * @param feature The feature
+	 * @param capability The capability
 	 * @return {@code true} if supported
 	 */
-	default boolean supportsFeature(MountCapability feature) {
-		return supportedFeatures().contains(feature);
+	default boolean supportsCapability(MountCapability capability) {
+		return capabilities().contains(capability);
 	}
 
 
