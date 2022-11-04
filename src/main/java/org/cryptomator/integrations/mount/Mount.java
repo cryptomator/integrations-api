@@ -30,7 +30,7 @@ public interface Mount extends AutoCloseable {
 	 * If supported, force-unmount the volume.
 	 *
 	 * @throws UnmountFailedException        If the unmount was not successful.
-	 * @throws UnsupportedOperationException If {@link MountFeature#UNMOUNT_FORCED} is not supported
+	 * @throws UnsupportedOperationException If {@link MountCapability#UNMOUNT_FORCED} is not supported
 	 */
 	default void unmountForced() throws UnmountFailedException {
 		throw new UnsupportedOperationException();

@@ -44,7 +44,7 @@ public interface MountService {
 	 *
 	 * @param mountName Name of the mount in the OS
 	 * @return Concatenated String of valid mount flags
-	 * @throws UnsupportedOperationException If {@link MountFeature#MOUNT_FLAGS} is not supported
+	 * @throws UnsupportedOperationException If {@link MountCapability#MOUNT_FLAGS} is not supported
 	 */
 	default String getDefaultMountFlags(String mountName) {
 		throw new UnsupportedOperationException();
@@ -54,7 +54,7 @@ public interface MountService {
 	 * The default TCP port of the loopback address used by this provider.
 	 *
 	 * @return fixed TCP port or 0 to use a system-assigned port
-	 * @throws UnsupportedOperationException If {@link MountFeature#LOOPBACK_PORT} is not supported
+	 * @throws UnsupportedOperationException If {@link MountCapability#LOOPBACK_PORT} is not supported
 	 */
 	@Range(from = 0, to = Short.MAX_VALUE)
 	default int getDefaultLoopbackPort() {
@@ -64,9 +64,9 @@ public interface MountService {
 	/**
 	 * Mount features supported by this provider.
 	 *
-	 * @return Set of supported {@link MountFeature}s
+	 * @return Set of supported {@link MountCapability}s
 	 */
-	Set<MountFeature> supportedFeatures();
+	Set<MountCapability> supportedFeatures();
 
 	/**
 	 * Tests whether this provider supports the given feature.
@@ -74,7 +74,7 @@ public interface MountService {
 	 * @param feature The feature
 	 * @return {@code true} if supported
 	 */
-	default boolean supportsFeature(MountFeature feature) {
+	default boolean supportsFeature(MountCapability feature) {
 		return supportedFeatures().contains(feature);
 	}
 

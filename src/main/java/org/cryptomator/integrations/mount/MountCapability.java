@@ -7,7 +7,7 @@ import java.nio.file.Path;
  * <p>
  * This may be used to show or hide different configuration options depending on the chosen mount provider.
  */
-public enum MountFeature {
+public enum MountCapability {
 	/**
 	 * The builder supports {@link MountBuilder#setLoopbackHostName(String)}.
 	 */

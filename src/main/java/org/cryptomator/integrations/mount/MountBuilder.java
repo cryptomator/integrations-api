@@ -18,7 +18,7 @@ public interface MountBuilder {
 	 *
 	 * @param hostName string conforming with the uri host part
 	 * @return <code>this</code>
-	 * @throws UnsupportedOperationException If {@link MountFeature#LOOPBACK_HOST_NAME} is not supported
+	 * @throws UnsupportedOperationException If {@link MountCapability#LOOPBACK_HOST_NAME} is not supported
 	 */
 	@Contract("_ -> this")
 	default MountBuilder setLoopbackHostName(String hostName) {
@@ -30,7 +30,7 @@ public interface MountBuilder {
 	 *
 	 * @param port Fixed TCP port or 0 to use a system-assigned port
 	 * @return <code>this</code>
-	 * @throws UnsupportedOperationException If {@link MountFeature#LOOPBACK_PORT} is not supported
+	 * @throws UnsupportedOperationException If {@link MountCapability#LOOPBACK_PORT} is not supported
 	 */
 	@Contract("_ -> this")
 	default MountBuilder setLoopbackPort(@Range(from = 0, to = Short.MAX_VALUE) int port) {
@@ -40,7 +40,7 @@ public interface MountBuilder {
 	/**
 	 * Sets the mount point.
 	 * <p>
-	 * Unless the mount provide supports {@link MountFeature#MOUNT_TO_SYSTEM_CHOSEN_PATH}, setting a mount point is required.
+	 * Unless the mount provide supports {@link MountCapability#MOUNT_TO_SYSTEM_CHOSEN_PATH}, setting a mount point is required.
 	 *
 	 * @param mountPoint Where to mount the volume
 	 * @return <code>this</code>
@@ -55,7 +55,7 @@ public interface MountBuilder {
 	 *
 	 * @param mountFlags Mount flags
 	 * @return <code>this</code>
-	 * @throws UnsupportedOperationException If {@link MountFeature#MOUNT_FLAGS} is not supported
+	 * @throws UnsupportedOperationException If {@link MountCapability#MOUNT_FLAGS} is not supported
 	 * @see MountService#getDefaultMountFlags(String)
 	 */
 	@Contract("_ -> this")
@@ -69,7 +69,7 @@ public interface MountBuilder {
 	 *
 	 * @param mountReadOnly Whether to mount read-only.
 	 * @return <code>this</code>
-	 * @throws UnsupportedOperationException If {@link MountFeature#READ_ONLY} is not supported
+	 * @throws UnsupportedOperationException If {@link MountCapability#READ_ONLY} is not supported
 	 */
 	@Contract("_ -> this")
 	default MountBuilder setReadOnly(boolean mountReadOnly) {
@@ -81,7 +81,7 @@ public interface MountBuilder {
 	 *
 	 * @param volumeId String conforming with the os-dependent path component restrictions
 	 * @return <code>this</code>
-	 * @throws UnsupportedOperationException If {@link MountFeature#VOLUME_ID} is not supported
+	 * @throws UnsupportedOperationException If {@link MountCapability#VOLUME_ID} is not supported
 	 */
 	@Contract("_ -> this")
 	default MountBuilder setVolumeId(String volumeId) {
