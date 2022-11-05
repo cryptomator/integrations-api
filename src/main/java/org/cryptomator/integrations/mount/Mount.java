@@ -1,5 +1,7 @@
 package org.cryptomator.integrations.mount;
 
+import java.io.IOException;
+
 /**
  * Handle to control the lifecycle of a mounted file system.
  * <p>
@@ -34,7 +36,13 @@ public interface Mount extends AutoCloseable {
 		throw new UnsupportedOperationException();
 	}
 
-	default void close() throws UnmountFailedException {
+	/**
+	 * Unmounts (if required) and releases any resources.
+	 *
+	 * @throws UnmountFailedException Thrown if unmounting failed
+	 * @throws IOException            Thrown if cleaning up resources failed
+	 */
+	default void close() throws UnmountFailedException, IOException {
 		unmount();
 	}
 
