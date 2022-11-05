@@ -74,7 +74,7 @@ public interface MountService {
 	 * @param capability The capability
 	 * @return {@code true} if supported
 	 */
-	default boolean supportsCapability(MountCapability capability) {
+	default boolean hasCapability(MountCapability capability) {
 		return capabilities().contains(capability);
 	}
 
