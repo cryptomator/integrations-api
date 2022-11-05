@@ -1,7 +1,5 @@
 package org.cryptomator.integrations.mount;
 
-import java.nio.file.Path;
-
 /**
  * Handle to control the lifecycle of a mounted file system.
  * <p>
@@ -14,7 +12,7 @@ public interface Mount extends AutoCloseable {
 	 *
 	 * @return Absolute path to the mountpoint.
 	 */
-	Path getMountpoint();
+	Mountpoint getMountpoint();
 
 	/**
 	 * Unmounts the mounted Volume.
