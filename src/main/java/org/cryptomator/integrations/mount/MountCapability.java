@@ -71,5 +71,10 @@ public enum MountCapability {
 	/**
 	 * The builder requires {@link MountBuilder#setVolumeId(String)}.
 	 */
-	VOLUME_ID
+	VOLUME_ID,
+
+	/**
+	 * The builder supports {@link MountBuilder#setVolumeName(String)}.
+	 */
+	VOLUME_NAME
 }

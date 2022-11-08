@@ -78,6 +78,8 @@ public interface MountBuilder {
 
 	/**
 	 * Sets a unique volume id.
+	 * <p>
+	 * The volume id is used as a path component, thus must conform with the os-dependent path component restrictions.
 	 *
 	 * @param volumeId String conforming with the os-dependent path component restrictions
 	 * @return <code>this</code>
@@ -85,6 +87,20 @@ public interface MountBuilder {
 	 */
 	@Contract("_ -> this")
 	default MountBuilder setVolumeId(String volumeId) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Sets a volume name.
+	 * <p>
+	 * The volume name is intended to be human-readable. The input string might be altered to replace non-conforming characters and thus is not suited to identify the volume.
+	 *
+	 * @param volumeName String conforming with the os-dependent naming restrictions
+	 * @return <code>this</code>
+	 * @throws UnsupportedOperationException If {@link MountCapability#VOLUME_ID} is not supported
+	 */
+	@Contract("_ -> this")
+	default MountBuilder setVolumeName(String volumeName) {
 		throw new UnsupportedOperationException();
 	}
 
