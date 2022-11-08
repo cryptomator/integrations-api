@@ -59,7 +59,7 @@ public enum MountCapability {
 	MOUNT_AS_DRIVE_LETTER,
 
 	/**
-	 * The provider supports suggesting a default mount point, if no mount point is set via {@link MountBuilder#setMountpoint(Path)}.
+	 * The service provider supports suggesting a default mount point, if no mount point is set via {@link MountBuilder#setMountpoint(Path)}.
 	 */
 	MOUNT_TO_SYSTEM_CHOSEN_PATH,
 

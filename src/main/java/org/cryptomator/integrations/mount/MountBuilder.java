@@ -52,7 +52,7 @@ public interface MountBuilder {
 	/**
 	 * Sets the mount point.
 	 * <p>
-	 * Unless the mount provide supports {@link MountCapability#MOUNT_TO_SYSTEM_CHOSEN_PATH}, setting a mount point is required.
+	 * Unless the mount service provider supports {@link MountCapability#MOUNT_TO_SYSTEM_CHOSEN_PATH}, setting a mount point is required.
 	 *
 	 * @param mountPoint Where to mount the volume
 	 * @return <code>this</code>
