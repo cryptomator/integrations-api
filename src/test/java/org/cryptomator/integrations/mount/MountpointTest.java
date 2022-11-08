@@ -21,7 +21,7 @@ public class MountpointTest {
 
 		if (mountPoint instanceof Mountpoint.WithPath m) {
 			Assertions.assertEquals(path, m.path());
-			Assertions.assertEquals(URI.create("file:/foo/bar"), mountPoint.uri());
+			Assertions.assertEquals(URI.create("file:///foo/bar"), mountPoint.uri());
 		} else {
 			Assertions.fail();
 		}
