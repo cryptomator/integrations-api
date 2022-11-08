@@ -14,6 +14,18 @@ import java.nio.file.Path;
 public interface MountBuilder {
 
 	/**
+	 * Sets the file system name.
+	 *
+	 * @param fileSystemName file system name
+	 * @return <code>this</code>
+	 * @throws UnsupportedOperationException If {@link MountCapability#FILE_SYSTEM_NAME} is not supported
+	 */
+	@Contract("_ -> this")
+	default MountBuilder setFileSystemName(String fileSystemName) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * Use the given host name as the loopback address.
 	 *
 	 * @param hostName string conforming with the uri host part

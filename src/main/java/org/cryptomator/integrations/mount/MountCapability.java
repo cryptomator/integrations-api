@@ -9,12 +9,17 @@ import java.nio.file.Path;
  */
 public enum MountCapability {
 	/**
+	 * The builder supports {@link MountBuilder#setFileSystemName(String)}.
+	 */
+	FILE_SYSTEM_NAME,
+
+	/**
 	 * The builder supports {@link MountBuilder#setLoopbackHostName(String)}.
 	 */
 	LOOPBACK_HOST_NAME,
 
 	/**
-	 * The provider supports {@link MountService#getDefaultLoopbackPort()}
+	 * The service provider supports {@link MountService#getDefaultLoopbackPort()}
 	 * and the builder requires {@link MountBuilder#setLoopbackPort(int)}.
 	 */
 	LOOPBACK_PORT,
