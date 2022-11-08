@@ -20,7 +20,7 @@ public enum MountCapability {
 	LOOPBACK_PORT,
 
 	/**
-	 * The provider supports {@link MountService#getDefaultMountFlags(String)}
+	 * The service provider supports {@link MountService#getDefaultMountFlags()}
 	 * and the builder requires {@link MountBuilder#setMountFlags(String)}.
 	 */
 	MOUNT_FLAGS,

@@ -42,11 +42,10 @@ public interface MountService {
 	/**
 	 * Default mount flags. May be empty.
 	 *
-	 * @param mountName Name of the mount in the OS
 	 * @return Concatenated String of valid mount flags
 	 * @throws UnsupportedOperationException If {@link MountCapability#MOUNT_FLAGS} is not supported
 	 */
-	default String getDefaultMountFlags(String mountName) {
+	default String getDefaultMountFlags() {
 		throw new UnsupportedOperationException();
 	}
 
