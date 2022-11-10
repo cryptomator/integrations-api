@@ -109,7 +109,7 @@ public interface MountBuilder {
 	 *
 	 * @param volumeName String conforming with the os-dependent naming restrictions
 	 * @return <code>this</code>
-	 * @throws UnsupportedOperationException If {@link MountCapability#VOLUME_ID} is not supported
+	 * @throws UnsupportedOperationException If {@link MountCapability#VOLUME_NAME} is not supported
 	 */
 	@Contract("_ -> this")
 	default MountBuilder setVolumeName(String volumeName) {
