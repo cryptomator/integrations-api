@@ -31,9 +31,10 @@ public interface TrayMenuController {
 	void showTrayIcon(byte[] imageData, Runnable defaultAction, String tooltip) throws TrayMenuException;
 
 	/**
-	 * Updates an icon on the system tray.
+	 * Updates the icon on the system tray.
 	 *
 	 * @param imageData What image to show
+	 * @throws IllegalStateException thrown when called before an icon has been added
 	 */
 	void updateTrayIcon(byte[] imageData);
 
