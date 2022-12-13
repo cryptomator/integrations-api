@@ -31,6 +31,13 @@ public interface TrayMenuController {
 	void showTrayIcon(byte[] imageData, Runnable defaultAction, String tooltip) throws TrayMenuException;
 
 	/**
+	 * Updates an icon on the system tray.
+	 *
+	 * @param imageData What image to show
+	 */
+	void updateTrayIcon(byte[] imageData);
+
+	/**
 	 * Show the given options in the tray menu.
 	 * <p>
 	 * This method may be called multiple times, e.g. when the vault list changes.
