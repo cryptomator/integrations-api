@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.cryptomator</groupId>
     <artifactId>integrations-api</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.0-SNAPSHOT</version>
 
     <name>Cryptomator Integrations API</name>
     <description>Defines optional service interfaces that may be used by Cryptomator</description>
