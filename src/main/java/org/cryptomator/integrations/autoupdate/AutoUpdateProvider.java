@@ -34,13 +34,15 @@ public interface AutoUpdateProvider {
 	 * Enable autoupdate features for the applcation.
 	 *
 	 * @return True, in case enabling the features was successful, false otherwise.
+	 * @throws AutoUpdateException If enabling autoupdate failed.
 	 */
-	boolean enableAutoUpdate();
+	boolean enableAutoUpdate() throws AutoUpdateException;
 
 	/**
 	 * Disable autoupdate features for the applcation.
 	 *
 	 * @return True, in case disabling the features was successful, false otherwise.
+	 * @throws AutoUpdateException If disabling autoupdate failed.
 	 */
-	boolean disableAutoUpdate();
+	boolean disableAutoUpdate() throws AutoUpdateException;
 }
