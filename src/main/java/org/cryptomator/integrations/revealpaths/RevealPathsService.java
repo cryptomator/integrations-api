@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 public interface RevealPathsService {
 
 	/**
-	 * Loads all supported service implementations.
+	 * Loads all supported service providers.
 	 *
 	 * @return Stream of supported RevealPathsService implementations (may be empty)
 	 */
@@ -21,10 +21,9 @@ public interface RevealPathsService {
 	 * Opens the parent of the given path in the system default file manager and highlights the resource the path points to.
 	 *
 	 * @param p Path to reveal
-	 * @throws RevealFailedException             If the file manager could not be opened or {@code p} does not have a parent
-	 * @throws java.nio.file.NoSuchFileException If {@code p} does not exist
+	 * @throws RevealFailedException             If the file manager could not be opened
+	 * @throws IllegalArgumentException 		 If {@code p} does not have a parent
 	 */
-	//TODO: Throw IllegalArgumenException if p.getParent() == null?
 	void reveal(Path p) throws RevealFailedException, NoSuchFileException;
 
 	/**
