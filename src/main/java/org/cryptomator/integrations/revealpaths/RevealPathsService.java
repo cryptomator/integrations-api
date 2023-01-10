@@ -1,14 +1,12 @@
 package org.cryptomator.integrations.revealpaths;
 
-import org.cryptomator.integrations.common.IntegrationService;
 import org.cryptomator.integrations.common.IntegrationsLoader;
 
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.stream.Stream;
 
-public interface RevealPathsService extends IntegrationService {
+public interface RevealPathsService {
 
 	/**
 	 * Loads all supported service implementations.
@@ -28,5 +26,13 @@ public interface RevealPathsService extends IntegrationService {
 	 */
 	//TODO: Throw IllegalArgumenException if p.getParent() == null?
 	void reveal(Path p) throws RevealFailedException, NoSuchFileException;
+
+	/**
+	 * Indicates, if this provider can be used.
+	 *
+	 * @return true, if this provider is supported in the current OS environment
+	 * @implSpec This check needs to return fast and in constant time
+	 */
+	boolean isSupported();
 
 }
