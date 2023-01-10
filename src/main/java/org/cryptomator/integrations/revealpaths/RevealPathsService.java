@@ -1,4 +1,4 @@
-package org.cryptomator.integrations.revealfiles;
+package org.cryptomator.integrations.revealpaths;
 
 import org.cryptomator.integrations.common.IntegrationService;
 import org.cryptomator.integrations.common.IntegrationsLoader;
@@ -29,13 +29,15 @@ public interface RevealPathsService extends IntegrationService {
 
 	/**
 	 * Opens the given directory in the system default file manager and highlights all files from the list.
+	 * @param directory
+	 * @param childNames
 	 *
 	 * @throws RevealFailedException             If the file manager could not be opened
 	 * @throws java.nio.file.NoSuchFileException If {@code directory} does not exist or is not a directory
 	 * @throws RuntimeException                  If at least one file from the list cannot be found? TODO: this might be unncessary/not possible
 	 * @throws UnsupportedOperationException     If this service implementation does not support revealing multiple files
 	 */
-	default void reveal(Path directory, List<String> childNames) throws RevealFailedException, NoSuchFileException {
+	default void reveal(Path directory, List<Path> childNames) throws RevealFailedException, NoSuchFileException {
 		throw new UnsupportedOperationException();
 	}
 }
