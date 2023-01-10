@@ -29,18 +29,4 @@ public interface RevealPathsService extends IntegrationService {
 	//TODO: Throw IllegalArgumenException if p.getParent() == null?
 	void reveal(Path p) throws RevealFailedException, NoSuchFileException;
 
-	/**
-	 * Opens the given directory in the system default file manager and highlights all files from the list.
-	 *
-	 * @param directory
-	 * @param childNames
-	 * @throws RevealFailedException             If the file manager could not be opened
-	 * @throws java.nio.file.NoSuchFileException If {@code directory} does not exist or is not a directory
-	 * @throws IllegalArgumentException			 If {@code childNames} contains non-relative paths or paths with a name count != 1 in normalized form
-	 * @throws UnsupportedOperationException     If this service implementation does not support revealing multiple files
-	 */
-	default void reveal(Path directory, List<Path> childNames) throws RevealFailedException, NoSuchFileException {
-		throw new UnsupportedOperationException();
-	}
-
 }
