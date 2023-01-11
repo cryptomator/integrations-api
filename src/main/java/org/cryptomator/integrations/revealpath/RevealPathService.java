@@ -10,7 +10,7 @@ public interface RevealPathService {
 	/**
 	 * Loads all supported service providers.
 	 *
-	 * @return Stream of supported RevealPathsService implementations (may be empty)
+	 * @return Stream of supported RevealPathService implementations (may be empty)
 	 */
 	static Stream<RevealPathService> get() {
 		return IntegrationsLoader.loadAll(RevealPathService.class).filter(RevealPathService::isSupported);
@@ -19,7 +19,7 @@ public interface RevealPathService {
 	/**
 	 * Reveal the path in the system default file manager.
 	 * <p>
-	 * If the path points to a file, the parent of the file is openend and file is selected in the file manager window.
+	 * If the path points to a file, the parent of the file is opened and the file is selected in the file manager window.
 	 * If the path points to a directory, the directory is opened and its content shown in the file manager window.
 	 *
 	 * @param p Path to reveal
