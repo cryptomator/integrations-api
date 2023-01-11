@@ -1,4 +1,4 @@
-package org.cryptomator.integrations.revealpaths;
+package org.cryptomator.integrations.revealpath;
 
 public class RevealFailedException extends Exception {
 

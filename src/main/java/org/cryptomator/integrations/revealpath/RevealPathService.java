@@ -1,4 +1,4 @@
-package org.cryptomator.integrations.revealpaths;
+package org.cryptomator.integrations.revealpath;
 
 import org.cryptomator.integrations.common.IntegrationsLoader;
 
@@ -6,15 +6,15 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
-public interface RevealPathsService {
+public interface RevealPathService {
 
 	/**
 	 * Loads all supported service providers.
 	 *
 	 * @return Stream of supported RevealPathsService implementations (may be empty)
 	 */
-	static Stream<RevealPathsService> get() {
-		return IntegrationsLoader.loadAll(RevealPathsService.class).filter(RevealPathsService::isSupported);
+	static Stream<RevealPathService> get() {
+		return IntegrationsLoader.loadAll(RevealPathService.class).filter(RevealPathService::isSupported);
 	}
 
 	/**

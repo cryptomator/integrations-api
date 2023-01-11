@@ -1,5 +1,5 @@
 import org.cryptomator.integrations.mount.MountService;
-import org.cryptomator.integrations.revealpaths.RevealPathsService;
+import org.cryptomator.integrations.revealpath.RevealPathService;
 import org.cryptomator.integrations.tray.TrayMenuController;
 import org.cryptomator.integrations.autostart.AutoStartProvider;
 import org.cryptomator.integrations.keychain.KeychainAccessProvider;
@@ -15,14 +15,14 @@ module org.cryptomator.integrations.api {
 	exports org.cryptomator.integrations.common;
 	exports org.cryptomator.integrations.keychain;
 	exports org.cryptomator.integrations.mount;
-	exports org.cryptomator.integrations.revealpaths;
+	exports org.cryptomator.integrations.revealpath;
 	exports org.cryptomator.integrations.tray;
 	exports org.cryptomator.integrations.uiappearance;
 
 	uses AutoStartProvider;
 	uses KeychainAccessProvider;
 	uses MountService;
-	uses RevealPathsService;
+	uses RevealPathService;
 	uses TrayIntegrationProvider;
 	uses TrayMenuController;
 	uses UiAppearanceProvider;
