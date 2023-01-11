@@ -2,7 +2,6 @@ package org.cryptomator.integrations.revealpath;
 
 import org.cryptomator.integrations.common.IntegrationsLoader;
 
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
@@ -18,13 +17,15 @@ public interface RevealPathService {
 	}
 
 	/**
-	 * Opens the parent of the given path in the system default file manager and highlights the resource the path points to.
+	 * Reveal the path in the system default file manager.
+	 * <p>
+	 * If the path points to a file, the parent of the file is openend and file is selected in the file manager window.
+	 * If the path points to a directory, the directory is opened and its content shown in the file manager window.
 	 *
 	 * @param p Path to reveal
-	 * @throws RevealFailedException             If the file manager could not be opened
-	 * @throws IllegalArgumentException 		 If {@code p} does not have a parent
+	 * @throws RevealFailedException if revealing the path failed
 	 */
-	void reveal(Path p) throws RevealFailedException, NoSuchFileException;
+	void reveal(Path p) throws RevealFailedException;
 
 	/**
 	 * Indicates, if this provider can be used.
