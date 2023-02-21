@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.cryptomator</groupId>
     <artifactId>integrations-api</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 
     <name>Cryptomator Integrations API</name>
     <description>Defines optional service interfaces that may be used by Cryptomator</description>
@@ -59,13 +59,13 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>5.8.2</version>
+			<version>5.9.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>4.3.1</version>
+			<version>4.8.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -92,6 +92,11 @@
                     </execution>
                 </executions>
             </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M7</version>
+			</plugin>
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.2.0</version>
