@@ -47,12 +47,15 @@ public class ClassLoaderFactoryTest {
 		@Test
 		@DisplayName("can load resources from both jars")
 		public void testForPluginDirWithPath() throws IOException {
-			var cl = ClassLoaderFactory.forPluginDirWithPath(pluginDir);
-			var fooContents = cl.getResourceAsStream("foo.properties").readAllBytes();
-			var barContents = cl.getResourceAsStream("bar.properties").readAllBytes();
+			try (var cl = ClassLoaderFactory.forPluginDirWithPath(pluginDir);
+				 var fooIn = cl.getResourceAsStream("foo.properties");
+				 var barIn = cl.getResourceAsStream("bar.properties")) {
+				var fooContents = fooIn.readAllBytes();
+				var barContents = barIn.readAllBytes();
 
-			Assertions.assertArrayEquals(FOO_CONTENTS, fooContents);
-			Assertions.assertArrayEquals(BAR_CONTENTS, barContents);
+				Assertions.assertArrayEquals(FOO_CONTENTS, fooContents);
+				Assertions.assertArrayEquals(BAR_CONTENTS, barContents);
+			}
 		}
 
 		@Test
@@ -60,12 +63,15 @@ public class ClassLoaderFactoryTest {
 		public void testForPluginDirFromSysProp() throws IOException {
 			System.setProperty("cryptomator.pluginDir", pluginDir.toString());
 
-			var cl = ClassLoaderFactory.forPluginDir();
-			var fooContents = cl.getResourceAsStream("foo.properties").readAllBytes();
-			var barContents = cl.getResourceAsStream("bar.properties").readAllBytes();
+			try (var cl = ClassLoaderFactory.forPluginDir();
+				 var fooIn = cl.getResourceAsStream("foo.properties");
+				 var barIn = cl.getResourceAsStream("bar.properties")) {
+				var fooContents = fooIn.readAllBytes();
+				var barContents = barIn.readAllBytes();
 
-			Assertions.assertArrayEquals(FOO_CONTENTS, fooContents);
-			Assertions.assertArrayEquals(BAR_CONTENTS, barContents);
+				Assertions.assertArrayEquals(FOO_CONTENTS, fooContents);
+				Assertions.assertArrayEquals(BAR_CONTENTS, barContents);
+			}
 		}
 	}
 
@@ -126,7 +132,7 @@ public class ClassLoaderFactoryTest {
 		var urls = ClassLoaderFactory.findJars(tmpDir);
 
 		Arrays.sort(urls, Comparator.comparing(URL::toString));
-		Assertions.assertArrayEquals(new URL[]{
+		Assertions.assertArrayEquals(new URL[] {
 				new URL(tmpDir.toUri() + "a.jar"),
 				new URL(tmpDir.toUri() + "dir2/b.jar")
 		}, urls);

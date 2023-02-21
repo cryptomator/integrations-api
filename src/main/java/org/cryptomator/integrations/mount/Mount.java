@@ -1,6 +1,6 @@
 package org.cryptomator.integrations.mount;
 
-import java.nio.file.Path;
+import java.io.IOException;
 
 /**
  * Handle to control the lifecycle of a mounted file system.
@@ -14,7 +14,7 @@ public interface Mount extends AutoCloseable {
 	 *
 	 * @return Absolute path to the mountpoint.
 	 */
-	Path getMountpoint();
+	Mountpoint getMountpoint();
 
 	/**
 	 * Unmounts the mounted Volume.
@@ -24,20 +24,26 @@ public interface Mount extends AutoCloseable {
 	 * @throws UnmountFailedException If the unmount was not successful.
 	 * @see #unmountForced()
 	 */
-	void unmout() throws UnmountFailedException;
+	void unmount() throws UnmountFailedException;
 
 	/**
 	 * If supported, force-unmount the volume.
 	 *
 	 * @throws UnmountFailedException        If the unmount was not successful.
-	 * @throws UnsupportedOperationException If {@link MountFeature#UNMOUNT_FORCED} is not supported
+	 * @throws UnsupportedOperationException If {@link MountCapability#UNMOUNT_FORCED} is not supported
 	 */
 	default void unmountForced() throws UnmountFailedException {
 		throw new UnsupportedOperationException();
 	}
 
-	default void close() throws UnmountFailedException {
-		unmout();
+	/**
+	 * Unmounts (if required) and releases any resources.
+	 *
+	 * @throws UnmountFailedException Thrown if unmounting failed
+	 * @throws IOException            Thrown if cleaning up resources failed
+	 */
+	default void close() throws UnmountFailedException, IOException {
+		unmount();
 	}
 
 
