@@ -28,7 +28,21 @@ public interface TrayMenuController {
 	 * @param tooltip       Text shown when hovering
 	 * @throws TrayMenuException thrown when adding the tray icon failed
 	 */
-	void showTrayIcon(byte[] imageData, Runnable defaultAction, String tooltip) throws TrayMenuException;
+	default void showTrayIcon(byte[] imageData, Runnable defaultAction, String tooltip) throws TrayMenuException {
+		showTrayIcon(imageData, null, defaultAction, tooltip);
+	};
+
+	/**
+	 * Displays an icon on the system tray.
+	 *
+	 * @param imageData     What image to show
+	 * @param icon			The icon name of the icon to show. Can be an icon name following
+	 *                  	the Freedesktop Icon Naming Specification or a path to an icon file
+	 * @param defaultAction Action to perform when interacting with the icon directly instead of its menu
+	 * @param tooltip       Text shown when hovering
+	 * @throws TrayMenuException thrown when adding the tray icon failed
+	 */
+	void showTrayIcon(byte[] imageData, String icon, Runnable defaultAction, String tooltip) throws TrayMenuException;
 
 	/**
 	 * Updates the icon on the system tray.
@@ -36,7 +50,19 @@ public interface TrayMenuController {
 	 * @param imageData What image to show
 	 * @throws IllegalStateException thrown when called before an icon has been added
 	 */
-	void updateTrayIcon(byte[] imageData);
+	default void updateTrayIcon(byte[] imageData) {
+		updateTrayIcon(imageData, null);
+	};
+
+	/**
+	 * Updates the icon on the system tray.
+	 *
+	 * @param imageData What image to show
+	 * @param icon		The icon name of the icon to show. Can be an icon name following
+	 *                  the Freedesktop Icon Naming Specification or a path to an icon file
+	 * @throws IllegalStateException thrown when called before an icon has been added
+	 */
+	void updateTrayIcon(byte[] imageData, String icon);
 
 	/**
 	 * Show the given options in the tray menu.
