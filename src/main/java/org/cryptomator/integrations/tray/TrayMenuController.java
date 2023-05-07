@@ -3,9 +3,9 @@ package org.cryptomator.integrations.tray;
 import org.cryptomator.integrations.common.IntegrationsLoader;
 import org.jetbrains.annotations.ApiStatus;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Displays a tray icon and menu
@@ -22,20 +22,20 @@ public interface TrayMenuController {
 	/**
 	 * Displays an icon on the system tray.
 	 *
-	 * @param imageUri      What image to show
+	 * @param iconLoader    A callback responsible for retrieving the icon in the required format
 	 * @param defaultAction Action to perform when interacting with the icon directly instead of its menu
 	 * @param tooltip       Text shown when hovering
 	 * @throws TrayMenuException thrown when adding the tray icon failed
 	 */
-	void showTrayIcon(URI imageUri, Runnable defaultAction, String tooltip) throws TrayMenuException;
+	void showTrayIcon(Consumer<TrayIconLoader> iconLoader, Runnable defaultAction, String tooltip) throws TrayMenuException;
 
 	/**
 	 * Updates the icon on the system tray.
 	 *
-	 * @param imageUri What image to show
+	 * @param iconLoader A callback responsible for retrieving the icon in the required format
 	 * @throws IllegalStateException thrown when called before an icon has been added
 	 */
-	void updateTrayIcon(URI imageUri);
+	void updateTrayIcon(Consumer<TrayIconLoader> iconLoader);
 
 	/**
 	 * Show the given options in the tray menu.
