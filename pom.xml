@@ -68,6 +68,13 @@
 			<version>4.8.0</version>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- JNA -->
+		<dependency>
+			<groupId>net.java.dev.jna</groupId>
+			<artifactId>jna-jpms</artifactId>
+			<version>5.14.0</version>
+		</dependency>
 	</dependencies>
 
     <build>
