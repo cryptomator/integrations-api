@@ -97,6 +97,18 @@ public class IntegrationsLoaderTest {
 			Assertions.assertFalse(IntegrationsLoader.passesStaticAvailabilityCheck(C3.class));
 		}
 
+		@Test
+		@DisplayName("throwing @CheckAvailability methods are treated as false")
+		public void testPassesAvailabilityCheckThrowing() {
+
+			@CheckAvailability class C1 {
+				@CheckAvailability public static boolean test() { throw new RuntimeException("FAIL"); }
+			}
+
+			Assertions.assertFalse(IntegrationsLoader.passesStaticAvailabilityCheck(C1.class));
+			Assertions.assertFalse(IntegrationsLoader.passesStaticAvailabilityCheck(InitExceptionTestClass.class));
+			Assertions.assertFalse(IntegrationsLoader.passesStaticAvailabilityCheck(InitExceptionTestClass.class)); //NoClassDefFoundError due to repated call
+		}
 
 	}
 
@@ -188,6 +200,26 @@ public class IntegrationsLoaderTest {
 			Assertions.assertFalse(IntegrationsLoader.passesInstanceAvailabilityCheck(new C1()));
 			Assertions.assertFalse(IntegrationsLoader.passesInstanceAvailabilityCheck(new C2()));
 			Assertions.assertFalse(IntegrationsLoader.passesInstanceAvailabilityCheck(new C3()));
+		}
+
+
+		@Test
+		@DisplayName("throwing @CheckAvailability methods are treated as false")
+		public void testPassesAvailabilityCheckThrowing() {
+
+			@CheckAvailability
+			class C1 {
+				@CheckAvailability public boolean test1() { throw new RuntimeException("FAIL"); }
+			}
+
+			@CheckAvailability
+			class C2 {
+				@CheckAvailability public boolean test1() { return true; }
+				@CheckAvailability public boolean test2() { throw new RuntimeException("FAIL"); }
+			}
+
+			Assertions.assertFalse(IntegrationsLoader.passesInstanceAvailabilityCheck(new C1()));
+			Assertions.assertFalse(IntegrationsLoader.passesInstanceAvailabilityCheck(new C2()));
 		}
 
 	}
