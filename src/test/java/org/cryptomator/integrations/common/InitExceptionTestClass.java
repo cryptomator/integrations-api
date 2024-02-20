@@ -6,14 +6,14 @@ public class InitExceptionTestClass {
 	private static final String TEST;
 
 	static {
-		TEST = throwSomethig();
+		TEST = throwSomething();
 	}
 
 	public InitExceptionTestClass() {
 
 	}
 
-	static String throwSomethig() {
+	static String throwSomething() {
 		throw new RuntimeException("STATIC FAIL");
 	}
 
