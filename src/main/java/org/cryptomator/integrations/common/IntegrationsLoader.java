@@ -9,7 +9,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
@@ -47,7 +49,8 @@ public class IntegrationsLoader {
 				.filter(IntegrationsLoader::isSupportedOperatingSystem)
 				.filter(IntegrationsLoader::passesStaticAvailabilityCheck)
 				.sorted(Comparator.comparingInt(IntegrationsLoader::getPriority).reversed())
-				.map(ServiceLoader.Provider::get)
+				.map(IntegrationsLoader::instantiateServiceProvider)
+				.filter(Objects::nonNull)
 				.filter(IntegrationsLoader::passesInstanceAvailabilityCheck)
 				.peek(impl -> logServiceIsAvailable(clazz, impl.getClass()));
 	}
@@ -68,18 +71,37 @@ public class IntegrationsLoader {
 		return annotations.length == 0 || Arrays.stream(annotations).anyMatch(OperatingSystem.Value::isCurrent);
 	}
 
+	private static <T> T instantiateServiceProvider(ServiceLoader.Provider<T> provider) {
+		try {
+			return provider.get();
+		} catch (ServiceConfigurationError err) {
+			LOG.warn("Unable to load service provider {}.", provider.type().getName(), err);
+			return null;
+		}
+	}
+
 	private static boolean passesStaticAvailabilityCheck(ServiceLoader.Provider<?> provider) {
 		return passesStaticAvailabilityCheck(provider.type());
 	}
 
 	@VisibleForTesting
 	static boolean passesStaticAvailabilityCheck(Class<?> type) {
-		return passesAvailabilityCheck(type, null);
+		try {
+			return passesAvailabilityCheck(type, null);
+		} catch (ExceptionInInitializerError | NoClassDefFoundError | RuntimeException t) {
+			LOG.warn("Unable to load service provider {}.", type.getName(), t);
+			return false;
+		}
 	}
 
 	@VisibleForTesting
 	static boolean passesInstanceAvailabilityCheck(Object instance) {
-		return passesAvailabilityCheck(instance.getClass(), instance);
+		try {
+			return passesAvailabilityCheck(instance.getClass(), instance);
+		} catch (RuntimeException rte) {
+			LOG.warn("Unable to load service provider {}.", instance.getClass().getName(), rte);
+			return false;
+		}
 	}
 
 	private static void logServiceIsAvailable(Class<?> apiType, Class<?> implType) {
