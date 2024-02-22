@@ -9,7 +9,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
@@ -49,8 +48,7 @@ public class IntegrationsLoader {
 				.filter(IntegrationsLoader::isSupportedOperatingSystem)
 				.filter(IntegrationsLoader::passesStaticAvailabilityCheck)
 				.sorted(Comparator.comparingInt(IntegrationsLoader::getPriority).reversed())
-				.map(IntegrationsLoader::instantiateServiceProvider)
-				.filter(Objects::nonNull)
+				.flatMap(IntegrationsLoader::instantiateServiceProvider)
 				.filter(IntegrationsLoader::passesInstanceAvailabilityCheck)
 				.peek(impl -> logServiceIsAvailable(clazz, impl.getClass()));
 	}
@@ -71,12 +69,20 @@ public class IntegrationsLoader {
 		return annotations.length == 0 || Arrays.stream(annotations).anyMatch(OperatingSystem.Value::isCurrent);
 	}
 
-	private static <T> T instantiateServiceProvider(ServiceLoader.Provider<T> provider) {
+	private static <T> Stream<T> instantiateServiceProvider(ServiceLoader.Provider<T> provider) {
 		try {
-			return provider.get();
+			return Stream.of(provider.get());
 		} catch (ServiceConfigurationError err) {
-			LOG.warn("Unable to load service provider {}.", provider.type().getName(), err);
-			return null;
+			//ServiceLoader.Provider::get throws this error if (from javadoc)
+			if (err.getCause() == null || //the public static "provider()" method of a provider factory returns null
+					err.getCause() instanceof ExceptionInInitializerError || // * the service provider cannot be instantiated,
+					err.getCause() instanceof NoClassDefFoundError ||
+					err.getCause() instanceof RuntimeException) {
+				LOG.warn("Unable to load service provider {}.", provider.type().getName(), err);
+				return Stream.empty();
+			} else {
+				throw err;
+			}
 		}
 	}
 
