@@ -10,6 +10,7 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Optional;
+import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
@@ -47,7 +48,7 @@ public class IntegrationsLoader {
 				.filter(IntegrationsLoader::isSupportedOperatingSystem)
 				.filter(IntegrationsLoader::passesStaticAvailabilityCheck)
 				.sorted(Comparator.comparingInt(IntegrationsLoader::getPriority).reversed())
-				.map(ServiceLoader.Provider::get)
+				.flatMap(IntegrationsLoader::instantiateServiceProvider)
 				.filter(IntegrationsLoader::passesInstanceAvailabilityCheck)
 				.peek(impl -> logServiceIsAvailable(clazz, impl.getClass()));
 	}
@@ -68,23 +69,44 @@ public class IntegrationsLoader {
 		return annotations.length == 0 || Arrays.stream(annotations).anyMatch(OperatingSystem.Value::isCurrent);
 	}
 
+	private static <T> Stream<T> instantiateServiceProvider(ServiceLoader.Provider<T> provider) {
+		try {
+			return Stream.of(provider.get());
+		} catch (ServiceConfigurationError err) {
+			//ServiceLoader.Provider::get throws this error if (from javadoc)
+			// * the public static "provider()" method of a provider factory returns null
+			// * the service provider cannot be instantiated due to an error/throw
+			LOG.warn("Unable to load service provider {}.", provider.type().getName(), err);
+			return Stream.empty();
+		}
+	}
+
 	private static boolean passesStaticAvailabilityCheck(ServiceLoader.Provider<?> provider) {
 		return passesStaticAvailabilityCheck(provider.type());
 	}
 
 	@VisibleForTesting
 	static boolean passesStaticAvailabilityCheck(Class<?> type) {
-		return passesAvailabilityCheck(type, null);
+		return silentlyPassesAvailabilityCheck(type, null);
 	}
 
 	@VisibleForTesting
 	static boolean passesInstanceAvailabilityCheck(Object instance) {
-		return passesAvailabilityCheck(instance.getClass(), instance);
+		return silentlyPassesAvailabilityCheck(instance.getClass(), instance);
 	}
 
 	private static void logServiceIsAvailable(Class<?> apiType, Class<?> implType) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("{}: Implementation is available: {}", apiType.getSimpleName(), implType.getName());
+		}
+	}
+
+	private static <T> boolean silentlyPassesAvailabilityCheck(Class<? extends T> type, @Nullable T instance) {
+		try {
+			return passesAvailabilityCheck(type, instance);
+		} catch (ExceptionInInitializerError | NoClassDefFoundError | RuntimeException e) {
+			LOG.warn("Unable to load service provider {}.", type.getName(), e);
+			return false;
 		}
 	}
 
