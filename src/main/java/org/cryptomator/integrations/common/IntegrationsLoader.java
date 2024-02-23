@@ -74,15 +74,10 @@ public class IntegrationsLoader {
 			return Stream.of(provider.get());
 		} catch (ServiceConfigurationError err) {
 			//ServiceLoader.Provider::get throws this error if (from javadoc)
-			if (err.getCause() == null || //the public static "provider()" method of a provider factory returns null
-					err.getCause() instanceof ExceptionInInitializerError || // * the service provider cannot be instantiated,
-					err.getCause() instanceof NoClassDefFoundError ||
-					err.getCause() instanceof RuntimeException) {
-				LOG.warn("Unable to load service provider {}.", provider.type().getName(), err);
-				return Stream.empty();
-			} else {
-				throw err;
-			}
+			// * the public static "provider()" method of a provider factory returns null
+			// * the service provider cannot be instantiated due to an error/throw
+			LOG.warn("Unable to load service provider {}.", provider.type().getName(), err);
+			return Stream.empty();
 		}
 	}
 
