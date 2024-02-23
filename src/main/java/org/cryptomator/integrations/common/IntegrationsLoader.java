@@ -22,29 +22,29 @@ public class IntegrationsLoader {
 	}
 
 	/**
-	 * Loads the best suited service, i.e. the one with the highest priority that is supported.
+	 * Loads the best suited service provider, i.e. the one with the highest priority that is supported.
 	 * <p>
 	 * If two services are available with the same priority, it is unspecified which one will be returned.
 	 *
 	 * @param clazz Service class
 	 * @param <T>   Type of the service
-	 * @return Highest priority service or empty if no supported service was found
+	 * @return Highest priority service provider or empty if no supported service provider was found
 	 */
 	public static <T> Optional<T> load(Class<T> clazz) {
 		return loadAll(clazz).findFirst();
 	}
 
 	/**
-	 * Loads all suited services ordered by priority in descending order.
+	 * Loads all suited service providers ordered by priority in descending order.
 	 *
 	 * @param clazz Service class
 	 * @param <T>   Type of the service
-	 * @return An ordered stream of all suited service candidates
+	 * @return An ordered stream of all suited service providers
 	 */
 	public static <T> Stream<T> loadAll(Class<T> clazz) {
 		return ServiceLoader.load(clazz, ClassLoaderFactory.forPluginDir())
 				.stream()
-				.peek(service -> logFoundService(clazz, service.type()))
+				.peek(serviceProvider -> logFoundServiceProvider(clazz, serviceProvider.type()))
 				.filter(IntegrationsLoader::isSupportedOperatingSystem)
 				.filter(IntegrationsLoader::passesStaticAvailabilityCheck)
 				.sorted(Comparator.comparingInt(IntegrationsLoader::getPriority).reversed())
@@ -53,7 +53,7 @@ public class IntegrationsLoader {
 				.peek(impl -> logServiceIsAvailable(clazz, impl.getClass()));
 	}
 
-	private static void logFoundService(Class<?> apiType, Class<?> implType) {
+	private static void logFoundServiceProvider(Class<?> apiType, Class<?> implType) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("{}: Found implementation: {} in jar {}", apiType.getSimpleName(), implType.getName(), implType.getProtectionDomain().getCodeSource().getLocation().getPath());
 		}
