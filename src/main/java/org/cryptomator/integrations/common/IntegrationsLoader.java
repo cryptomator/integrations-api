@@ -87,27 +87,26 @@ public class IntegrationsLoader {
 
 	@VisibleForTesting
 	static boolean passesStaticAvailabilityCheck(Class<?> type) {
-		try {
-			return passesAvailabilityCheck(type, null);
-		} catch (ExceptionInInitializerError | NoClassDefFoundError | RuntimeException t) {
-			LOG.warn("Unable to load service provider {}.", type.getName(), t);
-			return false;
-		}
+		return silentlyPassesAvailabilityCheck(type, null);
 	}
 
 	@VisibleForTesting
 	static boolean passesInstanceAvailabilityCheck(Object instance) {
-		try {
-			return passesAvailabilityCheck(instance.getClass(), instance);
-		} catch (RuntimeException rte) {
-			LOG.warn("Unable to load service provider {}.", instance.getClass().getName(), rte);
-			return false;
-		}
+		return silentlyPassesAvailabilityCheck(instance.getClass(), instance);
 	}
 
 	private static void logServiceIsAvailable(Class<?> apiType, Class<?> implType) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("{}: Implementation is available: {}", apiType.getSimpleName(), implType.getName());
+		}
+	}
+
+	private static <T> boolean silentlyPassesAvailabilityCheck(Class<? extends T> type, @Nullable T instance) {
+		try {
+			return passesAvailabilityCheck(type, instance);
+		} catch (ExceptionInInitializerError | NoClassDefFoundError | RuntimeException e) {
+			LOG.warn("Unable to load service provider {}.", type.getName(), e);
+			return false;
 		}
 	}
 
