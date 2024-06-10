@@ -1,3 +1,4 @@
+import org.cryptomator.integrations.filemanagersidebar.SidebarService;
 import org.cryptomator.integrations.mount.MountService;
 import org.cryptomator.integrations.revealpath.RevealPathService;
 import org.cryptomator.integrations.tray.TrayMenuController;
@@ -18,6 +19,7 @@ module org.cryptomator.integrations.api {
 	exports org.cryptomator.integrations.revealpath;
 	exports org.cryptomator.integrations.tray;
 	exports org.cryptomator.integrations.uiappearance;
+	exports org.cryptomator.integrations.filemanagersidebar;
 
 	uses AutoStartProvider;
 	uses KeychainAccessProvider;
@@ -26,4 +28,5 @@ module org.cryptomator.integrations.api {
 	uses TrayIntegrationProvider;
 	uses TrayMenuController;
 	uses UiAppearanceProvider;
+	uses SidebarService;
 }
