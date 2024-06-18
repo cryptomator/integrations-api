@@ -17,23 +17,21 @@ public interface SidebarService {
 	 *
 	 * @param displayName The display name of the sidebar entry
 	 * @param target      The filesystem path the sidebar entry points to.
-	 * @return a @{link SidebarEntry } object
+	 * @return a @{link SidebarEntry } object, used to remove the entry again
+	 * @apiNote Depending on the implemenation, the display name may not be used.
 	 */
-	SidebarEntry add(@NotNull String displayName, @NotNull Path target) throws SidebarServiceException;
+	SidebarEntry add(@NotNull Path target, @NotNull String displayName) throws SidebarServiceException;
 
 	/**
-	 * An entry of the filemanager sidebar, created with this service.
+	 * An entry of the filemanager sidebar, created by an implementation of this service.
 	 */
-	interface SidebarEntry extends Closeable {
+	interface SidebarEntry {
 
 		/**
 		 * Removes this entry from the sidebar. Once removed, this object cannot be added again.
 		 */
-		void remove() throws SidebarServiceException;
+		void remove();
 
-		default void close() {
-			remove();
-		}
 	}
 
 	static Optional<SidebarService> get() {
