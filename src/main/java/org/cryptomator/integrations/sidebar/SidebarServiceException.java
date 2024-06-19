@@ -1,4 +1,4 @@
-package org.cryptomator.integrations.filemanagersidebar;
+package org.cryptomator.integrations.sidebar;
 
 public class SidebarServiceException extends Exception {
 
