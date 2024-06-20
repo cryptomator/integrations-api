@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Blocking;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
-import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Service for integrating a given path into the sidebar/quick access bar of a filemanager.
@@ -40,7 +40,12 @@ public interface SidebarService {
 
 	}
 
-	static Optional<SidebarService> get() {
-		return IntegrationsLoader.load(SidebarService.class);
+	/**
+	 * Loads all supported mount providers.
+	 *
+	 * @return Stream of supported MountProviders (may be empty)
+	 */
+	static Stream<SidebarService> get() {
+		return IntegrationsLoader.loadAll(SidebarService.class);
 	}
 }
