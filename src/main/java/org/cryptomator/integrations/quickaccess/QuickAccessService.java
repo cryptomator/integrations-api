@@ -12,6 +12,7 @@ import java.util.stream.Stream;
  *
  * @apiNote On purpose this service does not define, what an "link to a quick access area" is. The defintion depends on the OS. For example, the quick access area can be the home screen/desktop and the link would be an icon leading to the linked path.
  */
+@FunctionalInterface
 public interface QuickAccessService {
 
 	/**
@@ -29,6 +30,7 @@ public interface QuickAccessService {
 	/**
 	 * An entry of the quick access area, created by a service implementation.
 	 */
+	@FunctionalInterface
 	interface QuickAccessEntry {
 
 		/**
