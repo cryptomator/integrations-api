@@ -10,6 +10,11 @@ import java.lang.annotation.Target;
 
 /**
  * A humanreadable name of the annotated class.
+ * <p>
+ * Checked in the default implementation of the {@link NamedServiceProvider#getName()} with lower priority.
+ *
+ * @see NamedServiceProvider
+ * @see LocalizedDisplayName
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
