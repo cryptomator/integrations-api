@@ -27,8 +27,7 @@ public interface NamedServiceProvider {
 			} catch (MissingResourceException e) {
 				var clazz = this.getClass();
 				var logger = LoggerFactory.getLogger(clazz);
-				logger.warn("Failed to load localized display name for {}. Falling back to not-localized display name/class name.", clazz.getName());
-				logger.debug("Reason for failure of {}.", clazz.getName(), e);
+				logger.warn("Failed to load localized display name for {}. Falling back to not-localized display name/class name.", clazz.getName(), e);
 			}
 		}
 
