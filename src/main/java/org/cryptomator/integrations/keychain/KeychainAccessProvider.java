@@ -59,12 +59,38 @@ public interface KeychainAccessProvider {
 	void storePassphrase(String key, @Nullable String displayName, CharSequence passphrase) throws KeychainAccessException;
 
 	/**
+	 * Associates a passphrase with a given key and a name for that key. Other than
+	 * {@link #storePassphrase(String key, String displayName, CharSequence passphrase)}, the user needs to ahthenticate
+	 * to store a passphase. The authentication mechanism is provided by the operating system dependant
+	 * implemantations of this API.
+	 *
+	 * @param key         Key used to retrieve the passphrase via {@link #loadPassphrase(String)}.
+	 * @param displayName The according name to the key. That's the name of the vault displayed in the UI.
+	 *                    It's passed to the keychain as an additional information about the vault besides the key.
+	 *                    The parameter does not need to be unique or be checked by the keychain.
+	 * @param passphrase  The secret to store in this keychain.
+	 * @throws KeychainAccessException If storing the password failed
+	 */
+	@Blocking
+	void storePassphraseForAuthenticatedUser(String key, @Nullable String displayName, CharSequence passphrase) throws KeychainAccessException;
+
+	/**
 	 * @param key Unique key previously used while {@link #storePassphrase(String, String, CharSequence)}  storing a passphrase}.
 	 * @return The stored passphrase for the given key or <code>null</code> if no value for the given key could be found.
 	 * @throws KeychainAccessException If loading the password failed
 	 */
 	@Blocking
 	char[] loadPassphrase(String key) throws KeychainAccessException;
+
+	/**
+	 * @param key Unique key previously used while {@link #storePassphrase(String, String, CharSequence)}  storing a passphrase}.
+	 * @return The stored passphrase for the given key or <code>null</code> if no value for the given key could be found.
+	 *         Other than {@link #loadPassphrase(String)}, the user needs to ahthenticate to retrieve a stored passphase.
+	 *         The authentication mechanism is provided by the operating system dependant implemantations of this API.
+	 * @throws KeychainAccessException If loading the password failed
+	 */
+	@Blocking
+	char[] loadPassphraseForAuthenticatedUser(String key) throws KeychainAccessException;
 
 	/**
 	 * Deletes a passphrase with a given key.
