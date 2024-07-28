@@ -83,16 +83,6 @@ public interface KeychainAccessProvider {
 	char[] loadPassphrase(String key) throws KeychainAccessException;
 
 	/**
-	 * @param key Unique key previously used while {@link #storePassphrase(String, String, CharSequence)}  storing a passphrase}.
-	 * @return The stored passphrase for the given key or <code>null</code> if no value for the given key could be found.
-	 *         Other than {@link #loadPassphrase(String)}, the user needs to ahthenticate to retrieve a stored passphase.
-	 *         The authentication mechanism is provided by the operating system dependant implemantations of this API.
-	 * @throws KeychainAccessException If loading the password failed
-	 */
-	@Blocking
-	char[] loadPassphraseForAuthenticatedUser(String key) throws KeychainAccessException;
-
-	/**
 	 * Deletes a passphrase with a given key.
 	 *
 	 * @param key Unique key previously used while {@link #storePassphrase(String, String, CharSequence)}  storing a passphrase}.
