@@ -58,8 +58,11 @@ public interface KeychainAccessProvider {
 	@Blocking
 	void storePassphrase(String key, @Nullable String displayName, CharSequence passphrase) throws KeychainAccessException;
 
-	 * {@link #storePassphrase(String key, String displayName, CharSequence passphrase)}, the user needs to authenticate
-	 * to store a passphrase. The authentication mechanism is provided by the operating system dependent
+	/**
+	 * Associates a passphrase with a given key and a name for that key. Other than
+	 * {@link #storePassphrase(String key, String displayName, CharSequence passphrase)}, the user needs to ahthenticate
+	 * to store a passphase. The authentication mechanism is provided by the operating system dependant
+	 * implemantations of this API.
 	 *
 	 * @param key         Key used to retrieve the passphrase via {@link #loadPassphrase(String)}.
 	 * @param displayName The according name to the key. That's the name of the vault displayed in the UI.
