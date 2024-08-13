@@ -56,23 +56,24 @@ public interface KeychainAccessProvider {
 	 * @throws KeychainAccessException If storing the password failed
 	 */
 	@Blocking
-	void storePassphrase(String key, @Nullable String displayName, CharSequence passphrase) throws KeychainAccessException;
+	default void storePassphrase(String key, @Nullable String displayName, CharSequence passphrase) throws KeychainAccessException {
+		storePassphrase(key, displayName, passphrase, false);
+	}
 
 	/**
-	 * Associates a passphrase with a given key and a name for that key. Other than
-	 * {@link #storePassphrase(String key, String displayName, CharSequence passphrase)}, the user needs to authenticate
-	 * to store a passphrase. The authentication mechanism is provided by the operating system dependent
-	 * implementations of this API.
+	 * Associates a passphrase with a given key and a name for that key.
 	 *
 	 * @param key         Key used to retrieve the passphrase via {@link #loadPassphrase(String)}.
 	 * @param displayName The according name to the key. That's the name of the vault displayed in the UI.
 	 *                    It's passed to the keychain as an additional information about the vault besides the key.
 	 *                    The parameter does not need to be unique or be checked by the keychain.
 	 * @param passphrase  The secret to store in this keychain.
+	 * @param requireOsAuthentication Defines, whether the user needs to authenticate to store a passphrase.
+	 *                                The authentication mechanism is provided by the operating system dependent
+	 *                                implementations of this API.
 	 * @throws KeychainAccessException If storing the password failed
 	 */
-	@Blocking
-	void storePassphraseForAuthenticatedUser(String key, @Nullable String displayName, CharSequence passphrase) throws KeychainAccessException;
+	void storePassphrase(String key, @Nullable String displayName, CharSequence passphrase, boolean requireOsAuthentication) throws KeychainAccessException;
 
 	/**
 	 * @param key Unique key previously used while {@link #storePassphrase(String, String, CharSequence)}  storing a passphrase}.
