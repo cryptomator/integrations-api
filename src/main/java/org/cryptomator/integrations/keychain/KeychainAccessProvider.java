@@ -33,6 +33,8 @@ public interface KeychainAccessProvider {
 
 	/**
 	 * Associates a passphrase with a given key.
+	 * <p>
+	 * Note: Caller is responsible for zeroing the passphrase array after use.
 	 *
 	 * @param key        Key used to retrieve the passphrase via {@link #loadPassphrase(String)}.
 	 * @param passphrase The secret to store in this keychain.
@@ -47,6 +49,8 @@ public interface KeychainAccessProvider {
 
 	/**
 	 * Associates a passphrase with a given key and a name for that key.
+	 * <p>
+	 * Note: Caller is responsible for zeroing the passphrase array after use.
 	 *
 	 * @param key         Key used to retrieve the passphrase via {@link #loadPassphrase(String)}.
 	 * @param displayName The according name to the key. That's the name of the vault displayed in the UI.
@@ -62,12 +66,14 @@ public interface KeychainAccessProvider {
 
 	/**
 	 * Associates a passphrase with a given key and a name for that key.
+	 * <p>
+	 * Note: Caller is responsible for zeroing the passphrase array after use.
 	 *
-	 * @param key         Key used to retrieve the passphrase via {@link #loadPassphrase(String)}.
-	 * @param displayName The according name to the key. That's the name of the vault displayed in the UI.
-	 *                    It's passed to the keychain as an additional information about the vault besides the key.
-	 *                    The parameter does not need to be unique or be checked by the keychain.
-	 * @param passphrase  The secret to store in this keychain.
+	 * @param key                     Key used to retrieve the passphrase via {@link #loadPassphrase(String)}.
+	 * @param displayName             The according name to the key. That's the name of the vault displayed in the UI.
+	 *                                It's passed to the keychain as an additional information about the vault besides the key.
+	 *                                The parameter does not need to be unique or be checked by the keychain.
+	 * @param passphrase              The secret to store in this keychain.
 	 * @param requireOsAuthentication Defines, whether the user needs to authenticate to store a passphrase.
 	 *                                The authentication mechanism is provided by the operating system dependent
 	 *                                implementations of this API.
@@ -93,6 +99,8 @@ public interface KeychainAccessProvider {
 
 	/**
 	 * Updates a passphrase with a given key. Noop, if there is no item for the given key.
+	 * <p>
+	 * Note: Caller is responsible for zeroing the passphrase array after use.
 	 *
 	 * @param key        Unique key previously used while {@link #storePassphrase(String, String, CharSequence)}  storing a passphrase}.
 	 * @param passphrase The secret to be updated in this keychain.
@@ -107,6 +115,8 @@ public interface KeychainAccessProvider {
 
 	/**
 	 * Updates a passphrase with a given key and stores a name for that key. Noop, if there is no item for the given key.
+	 * <p>
+	 * Note: Caller is responsible for zeroing the passphrase array after use.
 	 *
 	 * @param key         Unique key previously used while {@link #storePassphrase(String, String, CharSequence)}  storing a passphrase}.
 	 * @param displayName The according name to the key. That's the name of the vault displayed in the UI.
