@@ -39,7 +39,7 @@ public class IntegrationsLoader {
 
 	/**
 	 * Loads all suited service providers ordered by priority in descending order.
-	 * </p>
+	 * <p>
 	 * Only services declared in the `org.cryptomator.integrations.api` module can be loaded with this method.
 	 * Foreign services need to use {@link IntegrationsLoader#loadAll(ServiceLoader, Class)}.
 	 *
