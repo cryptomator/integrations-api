@@ -70,7 +70,7 @@ public class IntegrationsLoader {
 				.sorted(Comparator.comparingInt(IntegrationsLoader::getPriority).reversed())
 				.flatMap(IntegrationsLoader::instantiateServiceProvider)
 				.filter(IntegrationsLoader::passesInstanceAvailabilityCheck)
-				.peek(impl -> logServiceIsAvailable(clazz, impl.getClass())); //TODO
+				.peek(impl -> logServiceIsAvailable(clazz, impl.getClass()));
 	}
 
 	private static void logFoundServiceProvider(Class<?> apiType, Class<?> implType) {
