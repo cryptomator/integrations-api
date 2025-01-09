@@ -1,5 +1,6 @@
 package org.cryptomator.integrations.common;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
@@ -34,23 +36,41 @@ public class IntegrationsLoader {
 		return loadAll(clazz).findFirst();
 	}
 
+
 	/**
 	 * Loads all suited service providers ordered by priority in descending order.
+	 * <p>
+	 * Only services declared in the `org.cryptomator.integrations.api` module can be loaded with this method.
+	 * Foreign services need to use {@link IntegrationsLoader#loadAll(ServiceLoader, Class)}.
 	 *
 	 * @param clazz Service class
 	 * @param <T>   Type of the service
 	 * @return An ordered stream of all suited service providers
 	 */
 	public static <T> Stream<T> loadAll(Class<T> clazz) {
-		return ServiceLoader.load(clazz, ClassLoaderFactory.forPluginDir())
-				.stream()
+		return loadAll(ServiceLoader.load(clazz, ClassLoaderFactory.forPluginDir()), clazz);
+	}
+
+	/**
+	 * Loads all suited service providers ordered by priority in descending order.
+	 * <p>
+	 * This method allows arbitrary services to be loaded, as long as the provided service loader has module access to them.
+	 *
+	 * @param serviceLoader Loader with own module scope
+	 * @param clazz         Service class
+	 * @param <T>           Type of the service
+	 * @return An ordered stream of all suited service providers
+	 */
+	public static <T> Stream<T> loadAll(ServiceLoader<T> serviceLoader, @NotNull Class<T> clazz) {
+		Objects.requireNonNull(clazz, "Service to load not specified.");
+		return serviceLoader.stream()
 				.peek(serviceProvider -> logFoundServiceProvider(clazz, serviceProvider.type()))
 				.filter(IntegrationsLoader::isSupportedOperatingSystem)
 				.filter(IntegrationsLoader::passesStaticAvailabilityCheck)
 				.sorted(Comparator.comparingInt(IntegrationsLoader::getPriority).reversed())
 				.flatMap(IntegrationsLoader::instantiateServiceProvider)
 				.filter(IntegrationsLoader::passesInstanceAvailabilityCheck)
-				.peek(impl -> logServiceIsAvailable(clazz, impl.getClass()));
+				.peek(impl -> logServiceIsAvailable(clazz, impl.getClass())); //TODO
 	}
 
 	private static void logFoundServiceProvider(Class<?> apiType, Class<?> implType) {

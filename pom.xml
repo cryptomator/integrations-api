@@ -1,154 +1,184 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.cryptomator</groupId>
-    <artifactId>integrations-api</artifactId>
-    <version>1.4.0</version>
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.cryptomator</groupId>
+	<artifactId>integrations-api</artifactId>
+	<version>1.5.0</version>
 
-    <name>Cryptomator Integrations API</name>
-    <description>Defines optional service interfaces that may be used by Cryptomator</description>
-    <url>https://github.com/cryptomator/integrations-api</url>
-    <scm>
-        <connection>scm:git:git@github.com:cryptomator/integrations-api.git</connection>
-        <developerConnection>scm:git:git@github.com:cryptomator/integrations-api.git</developerConnection>
-        <url>git@github.com:cryptomator/integrations-api.git</url>
-    </scm>
-    <developers>
-        <developer>
-            <name>Sebastian Stenzel</name>
-            <email>sebastian.stenzel@skymatic.de</email>
-            <timezone>+1</timezone>
-            <organization>Skymatic GmbH</organization>
-            <organizationUrl>http://skymatic.de</organizationUrl>
-        </developer>
-    </developers>
+	<name>Cryptomator Integrations API</name>
+	<description>Defines optional service interfaces that may be used by Cryptomator</description>
+	<url>https://github.com/cryptomator/integrations-api</url>
+	<scm>
+		<connection>scm:git:git@github.com:cryptomator/integrations-api.git</connection>
+		<developerConnection>scm:git:git@github.com:cryptomator/integrations-api.git</developerConnection>
+		<url>git@github.com:cryptomator/integrations-api.git</url>
+	</scm>
+	<developers>
+		<developer>
+			<name>Sebastian Stenzel</name>
+			<email>sebastian.stenzel@skymatic.de</email>
+			<timezone>+1</timezone>
+			<organization>Skymatic GmbH</organization>
+			<organizationUrl>http://skymatic.de</organizationUrl>
+		</developer>
+	</developers>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jdk.version>17</jdk.version>
 
-    <licenses>
-        <license>
-            <name>GNU Affero General Public License (AGPL) version 3.0</name>
-            <url>https://www.gnu.org/licenses/agpl.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+		<slf4j.version>2.0.16</slf4j.version>
+		<jetbrains-annotation.version>26.0.1</jetbrains-annotation.version>
+
+		<!-- Test dependencies -->
+		<junit.version>5.11.4</junit.version>
+		<mockito.version>5.15.2</mockito.version>
+
+		<!-- Build dependencies -->
+		<mvn-compiler.version>3.13.0</mvn-compiler.version>
+		<mvn-source.version>3.3.1</mvn-source.version>
+		<mvn-surefire.version>3.5.2</mvn-surefire.version>
+		<mvn-javadoc.version>3.11.2</mvn-javadoc.version>
+		<mvn-gpg.version>3.2.7</mvn-gpg.version>
+		<nexus-staging.version>1.7.0</nexus-staging.version>
+	</properties>
+
+	<licenses>
+		<license>
+			<name>GNU Affero General Public License (AGPL) version 3.0</name>
+			<url>https://www.gnu.org/licenses/agpl.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>2.0.13</version>
+			<version>${slf4j.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.jetbrains</groupId>
 			<artifactId>annotations</artifactId>
-			<version>24.1.0</version>
+			<version>${jetbrains-annotation.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-			<version>2.0.13</version>
+			<version>${slf4j.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>5.10.3</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>5.12.0</version>
+			<version>${mockito.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
-                <configuration>
-                    <release>17</release>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${mvn-compiler.version}</version>
+				<configuration>
+					<release>${jdk.version}</release>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>${mvn-source.version}</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.3.1</version>
+				<version>${mvn-surefire.version}</version>
 			</plugin>
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.8.0</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <quiet>true</quiet>
-                    <release>17</release>
-                    <tags>
-                        <!-- workaround for "unknown tag: implNote", see https://blog.codefx.org/java/new-javadoc-tags/#Maven  -->
-                        <tag>
-                            <name>apiNote</name>
-                            <placement>a</placement>
-                            <head>API Note:</head>
-                        </tag>
-                        <tag>
-                            <name>implSpec</name>
-                            <placement>a</placement>
-                            <head>Implementation Requirements:</head>
-                        </tag>
-                        <tag>
-                            <name>implNote</name>
-                            <placement>a</placement>
-                            <head>Implementation Note:</head>
-                        </tag>
-                        <tag><name>param</name></tag>
-                        <tag><name>return</name></tag>
-                        <tag><name>throws</name></tag>
-                        <tag><name>since</name></tag>
-                        <tag><name>version</name></tag>
-                        <tag><name>serialData</name></tag>
-                        <tag><name>see</name></tag>
-                    </tags>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${mvn-javadoc.version}</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<quiet>true</quiet>
+					<release>17</release>
+					<tags>
+						<!-- workaround for "unknown tag: implNote", see https://blog.codefx.org/java/new-javadoc-tags/#Maven  -->
+						<tag>
+							<name>apiNote</name>
+							<placement>a</placement>
+							<head>API Note:</head>
+						</tag>
+						<tag>
+							<name>implSpec</name>
+							<placement>a</placement>
+							<head>Implementation Requirements:</head>
+						</tag>
+						<tag>
+							<name>implNote</name>
+							<placement>a</placement>
+							<head>Implementation Note:</head>
+						</tag>
+						<tag>
+							<name>param</name>
+						</tag>
+						<tag>
+							<name>return</name>
+						</tag>
+						<tag>
+							<name>throws</name>
+						</tag>
+						<tag>
+							<name>since</name>
+						</tag>
+						<tag>
+							<name>version</name>
+						</tag>
+						<tag>
+							<name>serialData</name>
+						</tag>
+						<tag>
+							<name>see</name>
+						</tag>
+					</tags>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
-    <profiles>
+	<profiles>
 		<profile>
 			<id>sign</id>
 			<build>
 				<plugins>
 					<plugin>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>3.2.4</version>
+						<version>${mvn-gpg.version}</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -157,10 +187,7 @@
 									<goal>sign</goal>
 								</goals>
 								<configuration>
-									<gpgArguments>
-										<arg>--pinentry-mode</arg>
-										<arg>loopback</arg>
-									</gpgArguments>
+									<signer>bc</signer>
 								</configuration>
 							</execution>
 						</executions>
@@ -183,7 +210,7 @@
 					<plugin>
 						<groupId>org.sonatype.plugins</groupId>
 						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<version>1.7.0</version>
+						<version>${nexus-staging.version}</version>
 						<extensions>true</extensions>
 						<configuration>
 							<serverId>ossrh</serverId>
