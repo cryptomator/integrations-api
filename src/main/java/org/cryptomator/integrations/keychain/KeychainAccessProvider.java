@@ -1,6 +1,7 @@
 package org.cryptomator.integrations.keychain;
 
 import org.cryptomator.integrations.common.IntegrationsLoader;
+import org.cryptomator.integrations.common.NamedServiceProvider;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Blocking;
 import org.jetbrains.annotations.Nls;
@@ -11,7 +12,7 @@ import java.util.stream.Stream;
 /**
  * This is the interface used by Cryptomator to store passwords securely in external keychains, such as system keychains or password managers.
  */
-public interface KeychainAccessProvider {
+public interface KeychainAccessProvider extends NamedServiceProvider {
 
 	/**
 	 * Loads all available KeychainAccessProvider.
@@ -22,14 +23,6 @@ public interface KeychainAccessProvider {
 	static Stream<KeychainAccessProvider> get() {
 		return IntegrationsLoader.loadAll(KeychainAccessProvider.class).filter(KeychainAccessProvider::isSupported);
 	}
-
-	/**
-	 * A name to display in UI elements. If required, this should be localized.
-	 *
-	 * @return user-friendly name (must not be null or empty)
-	 */
-	@Nls(capitalization = Nls.Capitalization.Title)
-	String displayName();
 
 	/**
 	 * Associates a passphrase with a given key and a name for that key.
