@@ -32,22 +32,6 @@ public interface KeychainAccessProvider {
 	String displayName();
 
 	/**
-	 * Associates a passphrase with a given key.
-	 * <p>
-	 * Note: Caller is responsible for zeroing the passphrase array after use.
-	 *
-	 * @param key        Key used to retrieve the passphrase via {@link #loadPassphrase(String)}.
-	 * @param passphrase The secret to store in this keychain.
-	 * @throws KeychainAccessException If storing the password failed
-	 * @deprecated Please use {@link #storePassphrase(String, String, CharSequence)} instead
-	 */
-	@Deprecated
-	@ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
-	default void storePassphrase(String key, CharSequence passphrase) throws KeychainAccessException {
-		storePassphrase(key, null, passphrase);
-	}
-
-	/**
 	 * Associates a passphrase with a given key and a name for that key.
 	 * <p>
 	 * Note: Caller is responsible for zeroing the passphrase array after use.
@@ -96,22 +80,6 @@ public interface KeychainAccessProvider {
 	 * @throws KeychainAccessException If deleting the password failed
 	 */
 	void deletePassphrase(String key) throws KeychainAccessException;
-
-	/**
-	 * Updates a passphrase with a given key. Noop, if there is no item for the given key.
-	 * <p>
-	 * Note: Caller is responsible for zeroing the passphrase array after use.
-	 *
-	 * @param key        Unique key previously used while {@link #storePassphrase(String, String, CharSequence)}  storing a passphrase}.
-	 * @param passphrase The secret to be updated in this keychain.
-	 * @throws KeychainAccessException If changing the password failed
-	 * @deprecated Please use {@link #changePassphrase(String, String, CharSequence)} instead
-	 */
-	@Deprecated
-	@ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
-	default void changePassphrase(String key, CharSequence passphrase) throws KeychainAccessException {
-		changePassphrase(key, null, passphrase);
-	}
 
 	/**
 	 * Updates a passphrase with a given key and stores a name for that key. Noop, if there is no item for the given key.
