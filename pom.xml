@@ -33,8 +33,8 @@
 		<jetbrains-annotation.version>26.0.2</jetbrains-annotation.version>
 
 		<!-- Test dependencies -->
-		<junit.version>5.12.0</junit.version>
-		<mockito.version>5.15.2</mockito.version>
+		<junit.version>5.12.1</junit.version>
+		<mockito.version>5.16.1</mockito.version>
 
 		<!-- Build dependencies -->
 		<mvn-compiler.version>3.14.0</mvn-compiler.version>
