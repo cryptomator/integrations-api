@@ -1,12 +1,17 @@
 package org.cryptomator.integrations.uiappearance;
 
 import org.cryptomator.integrations.common.IntegrationsLoader;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Optional;
 
 /**
  * This is the interface used by Cryptomator to get os specific UI appearances and themes.
+ *
+ * @deprecated Cryptomator uses since version 1.14.0 the JavaFX framework in version 22, which provides via Platform.Preferences the system color scheme
  */
+@Deprecated(since = "1.6.0")
+@ApiStatus.ScheduledForRemoval(inVersion = "1.7.0")
 public interface UiAppearanceProvider {
 
 	/**
