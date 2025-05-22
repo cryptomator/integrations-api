@@ -39,7 +39,7 @@
 		<!-- Build dependencies -->
 		<mvn-compiler.version>3.14.0</mvn-compiler.version>
 		<mvn-source.version>3.3.1</mvn-source.version>
-		<mvn-surefire.version>3.5.2</mvn-surefire.version>
+		<mvn-surefire.version>3.5.3</mvn-surefire.version>
 		<mvn-javadoc.version>3.11.2</mvn-javadoc.version>
 		<mvn-gpg.version>3.2.7</mvn-gpg.version>
 		<central-publishing.version>0.7.0</central-publishing.version>
