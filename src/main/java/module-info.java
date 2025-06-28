@@ -6,6 +6,7 @@ import org.cryptomator.integrations.autostart.AutoStartProvider;
 import org.cryptomator.integrations.keychain.KeychainAccessProvider;
 import org.cryptomator.integrations.tray.TrayIntegrationProvider;
 import org.cryptomator.integrations.uiappearance.UiAppearanceProvider;
+import org.cryptomator.integrations.update.UpdateService;
 
 
 module org.cryptomator.integrations.api {
@@ -20,6 +21,7 @@ module org.cryptomator.integrations.api {
 	exports org.cryptomator.integrations.tray;
 	exports org.cryptomator.integrations.uiappearance;
 	exports org.cryptomator.integrations.quickaccess;
+	exports org.cryptomator.integrations.update;
 
 	uses AutoStartProvider;
 	uses KeychainAccessProvider;
@@ -29,4 +31,5 @@ module org.cryptomator.integrations.api {
 	uses TrayMenuController;
 	uses UiAppearanceProvider;
 	uses QuickAccessService;
+	uses UpdateService;
 }
