@@ -2,7 +2,7 @@ package org.cryptomator.integrations.update;
 
 import org.cryptomator.integrations.common.IntegrationsLoader;
 
-import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * This is the interface used by Cryptomator to provide a way to update Cryptomator in a convinient way.
@@ -10,8 +10,8 @@ import java.util.Optional;
  */
 public interface UpdateService {
 
-	static Optional<UpdateService> get() {
-		return IntegrationsLoader.load(UpdateService.class);
+	static Stream<UpdateService> get() {
+		return IntegrationsLoader.loadAll(UpdateService.class).filter(UpdateService::isSupported);
 	}
 
 	enum DistributionChannel {
