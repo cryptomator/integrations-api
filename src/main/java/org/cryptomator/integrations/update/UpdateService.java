@@ -1,5 +1,6 @@
 package org.cryptomator.integrations.update;
 
+import org.cryptomator.integrations.common.DistributionChannel;
 import org.cryptomator.integrations.common.IntegrationsLoader;
 
 import java.util.stream.Stream;
@@ -14,19 +15,6 @@ public interface UpdateService {
 		return IntegrationsLoader.loadAll(UpdateService.class).filter(UpdateService::isSupported);
 	}
 
-	enum DistributionChannel {
-		LINUX_APPIMAGE,
-		LINUX_AUR,
-		LINUX_FLATPAK,
-		LINUX_NIXOS,
-		LINUX_PPA,
-		MAC_BREW,
-		MAC_DMG,
-		WINDOWS_EXE,
-		WINDOWS_MSI,
-		WINDOWS_WINGET
-	}
-
 	/**
 	 * @return <code>true</code> if this UppdateService can update the app.
 	 * @implSpec This method must not throw any exceptions and should fail fast
@@ -37,10 +25,10 @@ public interface UpdateService {
 	/**
 	 * Checks whether the update itself is already published on the given channel.
 	 *
-	 * @param channel The {@link DistributionChannel}  to check.
+	 * @param channel The DistributionChannel.Value to check.
 	 * @return        <code>null</code> if an update is not available, the version of the available update as String otherwise.
 	 */
-	String isUpdateAvailable(DistributionChannel channel);
+	String isUpdateAvailable(DistributionChannel.Value channel);
 
 	/**
 	 * Trigger updating the app.
