@@ -38,6 +38,13 @@ public interface UpdateService {
 	void triggerUpdate() throws UpdateFailedException;
 
 	/**
+	 * Start a new instance of the application.
+	 *
+	 * @return The PID of the new process.
+	 */
+	long spawnApp();
+
+	/**
 	 * A flag indicating whether elevated permissions or sudo is required during update
 	 * (so the user can be prepared for a corresponding prompt)
 	 *
