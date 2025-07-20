@@ -59,4 +59,32 @@ public interface UpdateService {
 	 * @return The text to describes the update.
 	 */
 	String getDisplayName();
+
+	/**
+	 * Register a listener to receive update available events.
+	 *
+	 * @param listener The listener to register.
+	 */
+	void addUpdateAvailableListener(UpdateAvailableListener listener);
+
+	/**
+	 * Unregister a previously registered update available listener.
+	 *
+	 * @param listener The listener to unregister.
+	 */
+	void removeUpdateAvailableListener(UpdateAvailableListener listener);
+
+	/**
+	 * Register a listener to receive update progress events.
+	 *
+	 * @param listener The listener to register.
+	 */
+	void addProgressListener(ProgressListener listener);
+
+	/**
+	 * Unregister a previously registered update progress listener.
+	 *
+	 * @param listener The listener to unregister.
+	 */
+	void removeProgressListener(ProgressListener listener);
 }
