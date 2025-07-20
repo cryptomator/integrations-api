@@ -23,12 +23,12 @@ public interface UpdateService {
 	boolean isSupported();
 
 	/**
-	 * Checks whether the update itself is already published on the given channel.
+	 * Retrieve an object to check for the latest release published on the given channel.
 	 *
 	 * @param channel The DistributionChannel.Value to check.
-	 * @return        <code>null</code> if an update is not available, the version of the available update as String otherwise.
+	 * @return        An object that is capable of checking asynchronously for the latest release.
 	 */
-	String isUpdateAvailable(DistributionChannel.Value channel);
+	Object getLatestReleaseChecker(DistributionChannel.Value channel);
 
 	/**
 	 * Trigger updating the app.
