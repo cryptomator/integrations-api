@@ -87,4 +87,33 @@ public interface UpdateService {
 	 * @param listener The listener to unregister.
 	 */
 	void removeProgressListener(ProgressListener listener);
+
+	/**
+	 * Register a listener to receive an event containing the pid of a spawned process.
+	 *
+	 * @param listener The listener to register.
+	 */
+	void addSpawnStartedListener(SpawnStartedListener listener);
+
+	/**
+	 * Unregister a previously registered spawned process listener.
+	 *
+	 * @param listener The listener to unregister.
+	 */
+	void removeSpawnStartedListener(SpawnStartedListener listener);
+
+	/**
+	 * Register a listener to receive an event containing the pid
+	 * and exit status of a process that exits.
+	 *
+	 * @param listener The listener to register.
+	 */
+	void addSpawnExitedListener(SpawnExitedListener listener);
+
+	/**
+	 * Unregister a previously registered process exits listener.
+	 *
+	 * @param listener The listener to unregister.
+	 */
+	void removeSpawnExitedListener(SpawnExitedListener listener);
 }
