@@ -1,6 +1,5 @@
 package org.cryptomator.integrations.update;
 
-import org.cryptomator.integrations.common.DistributionChannel;
 import org.cryptomator.integrations.common.IntegrationsLoader;
 
 import java.util.stream.Stream;
@@ -25,10 +24,9 @@ public interface UpdateService {
 	/**
 	 * Retrieve an object to check for the latest release published on the given channel.
 	 *
-	 * @param channel The DistributionChannel.Value to check.
 	 * @return        An object that is capable of checking asynchronously for the latest release.
 	 */
-	Object getLatestReleaseChecker(DistributionChannel.Value channel);
+	Object getLatestReleaseChecker();
 
 	/**
 	 * Trigger updating the app.
@@ -53,28 +51,6 @@ public interface UpdateService {
 	boolean doesRequireElevatedPermissions();
 
 	/**
-	 * Get a meaningful description of the update available to display it in the app
-	 * like "Update via apt"
-	 *
-	 * @return The text to describes the update.
-	 */
-	String getDisplayName();
-
-	/**
-	 * Register a listener to receive update available events.
-	 *
-	 * @param listener The listener to register.
-	 */
-	void addUpdateAvailableListener(UpdateAvailableListener listener);
-
-	/**
-	 * Unregister a previously registered update available listener.
-	 *
-	 * @param listener The listener to unregister.
-	 */
-	void removeUpdateAvailableListener(UpdateAvailableListener listener);
-
-	/**
 	 * Register a listener to receive update progress events.
 	 *
 	 * @param listener The listener to register.
@@ -88,32 +64,4 @@ public interface UpdateService {
 	 */
 	void removeProgressListener(ProgressListener listener);
 
-	/**
-	 * Register a listener to receive an event containing the pid of a spawned process.
-	 *
-	 * @param listener The listener to register.
-	 */
-	void addSpawnStartedListener(SpawnStartedListener listener);
-
-	/**
-	 * Unregister a previously registered spawned process listener.
-	 *
-	 * @param listener The listener to unregister.
-	 */
-	void removeSpawnStartedListener(SpawnStartedListener listener);
-
-	/**
-	 * Register a listener to receive an event containing the pid
-	 * and exit status of a process that exits.
-	 *
-	 * @param listener The listener to register.
-	 */
-	void addSpawnExitedListener(SpawnExitedListener listener);
-
-	/**
-	 * Unregister a previously registered process exits listener.
-	 *
-	 * @param listener The listener to unregister.
-	 */
-	void removeSpawnExitedListener(SpawnExitedListener listener);
 }
