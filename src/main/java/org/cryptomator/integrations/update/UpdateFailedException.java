@@ -1,6 +1,11 @@
 package org.cryptomator.integrations.update;
 
-public class UpdateFailedException extends Exception {
+import org.jetbrains.annotations.ApiStatus;
+
+import java.io.IOException;
+
+@ApiStatus.Experimental
+public class UpdateFailedException extends IOException {
 
 	public UpdateFailedException(String message) {
 		super(message);
