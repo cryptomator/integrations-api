@@ -27,7 +27,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jdk.version>17</jdk.version>
+		<jdk.version>21</jdk.version>
 
 		<slf4j.version>2.0.17</slf4j.version>
 		<jetbrains-annotation.version>26.0.2</jetbrains-annotation.version>
@@ -126,7 +126,7 @@
 				</executions>
 				<configuration>
 					<quiet>true</quiet>
-					<release>17</release>
+					<release>21</release>
 					<tags>
 						<!-- workaround for "unknown tag: implNote", see https://blog.codefx.org/java/new-javadoc-tags/#Maven  -->
 						<tag>
