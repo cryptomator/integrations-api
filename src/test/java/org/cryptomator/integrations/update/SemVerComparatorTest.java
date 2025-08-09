@@ -35,7 +35,8 @@ public class SemVerComparatorTest {
 			"1.23.4, 1.23.4-56.78",
 			"1.23.4-beta, 1.23.4-alpha",
 			"1.23.4-alpha.1, 1.23.4-alpha",
-			"1.23.4-56.79, 1.23.4-56.78"
+			"1.23.4-56.79, 1.23.4-56.78",
+			"1.23.4-alpha, 1.23.4-1",
 	})
 	public void compareHigherToLowerVersions(String higherVersion, String lowerVersion) {
 		Assertions.assertEquals(1, Integer.signum(semVerComparator.compare(higherVersion, lowerVersion)));
@@ -52,7 +53,8 @@ public class SemVerComparatorTest {
 			"1.23.4-56.78, 1.23.4",
 			"1.23.4-alpha, 1.23.4-beta",
 			"1.23.4-alpha, 1.23.4-alpha.1",
-			"1.23.4-56.78, 1.23.4-56.79"
+			"1.23.4-56.78, 1.23.4-56.79",
+			"1.23.4-1, 1.23.4-alpha",
 	})
 	public void compareLowerToHigherVersions(String lowerVersion, String higherVersion) {
 		Assertions.assertEquals(-1, Integer.signum(semVerComparator.compare(lowerVersion, higherVersion)));
