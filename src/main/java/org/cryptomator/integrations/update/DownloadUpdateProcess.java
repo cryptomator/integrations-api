@@ -45,12 +45,21 @@ public abstract class DownloadUpdateProcess implements UpdateProcess {
 		this.uri = uri;
 		this.checksum = checksum;
 		this.totalBytes = new AtomicLong(estDownloadSize);
-		this.downloadThread = Thread.ofVirtual().start(this::download);
+		this.downloadThread = Thread.ofVirtual().unstarted(this::download);
+	}
+
+	protected void startDownload() {
+		downloadThread.start();
 	}
 
 	@Override
 	public double preparationProgress() {
-		return (double) loadedBytes.sum() / totalBytes.get();
+		long total = totalBytes.get();
+		if (total <= 0) {
+			return -1.0;
+		} else {
+			return (double) loadedBytes.sum() / totalBytes.get();
+		}
 	}
 
 	@Override
@@ -117,12 +126,12 @@ public abstract class DownloadUpdateProcess implements UpdateProcess {
 			try (var in = new DownloadInputStream(response.body(), loadedBytes, sha256);
 				 var src = Channels.newChannel(in);
 				 var dst = FileChannel.open(downloadPath, StandardOpenOption.WRITE, StandardOpenOption.CREATE_NEW)) {
-				dst.transferFrom(src, 0, totalBytes.get());
+				dst.transferFrom(src, 0, Long.MAX_VALUE);
 			}
 
 			// verify checksum if provided
 			byte[] calculatedChecksum = sha256.digest();
-			if (!MessageDigest.isEqual(calculatedChecksum, checksum)) {
+			if (checksum != null && !MessageDigest.isEqual(calculatedChecksum, checksum)) {
 				throw new IOException("Checksum verification failed for downloaded file: " + downloadPath);
 			}
 
@@ -154,8 +163,10 @@ public abstract class DownloadUpdateProcess implements UpdateProcess {
 		@Override
 		public int read(byte[] b, int off, int len) throws IOException {
 			int n = super.read(b, off, len);
-			digest.update(b, off, n);
-			counter.add(n);
+			if (n == -1) {
+				digest.update(b, off, n);
+				counter.add(n);
+			}
 			return n;
 		}
 

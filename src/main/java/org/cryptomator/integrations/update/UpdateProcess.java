@@ -10,7 +10,7 @@ public interface UpdateProcess {
 
 	/**
 	 * A thread-safe method to check the progress of the update preparation.
-	 * @return a value between 0.0 and 1.0 indicating the progress of the update preparation.
+	 * @return a value between 0.0 and 1.0 indicating the progress of the update preparation or -1.0 indicating indeterminate progress.
 	 */
 	double preparationProgress();
 
