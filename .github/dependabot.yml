@@ -15,13 +15,13 @@ updates:
       maven-build-plugins:
         patterns:
           - "org.apache.maven.plugins:*"
-          - "org.sonatype.plugins:nexus-staging-maven-plugin"
+          - "org.sonatype.central:central-publishing-maven-plugin"
       java-production-dependencies:
         patterns:
           - "*"
         exclude-patterns:
           - "org.apache.maven.plugins:*"
-          - "org.sonatype.plugins:nexus-staging-maven-plugin"
+          - "org.sonatype.central:central-publishing-maven-plugin"
           - "org.junit.jupiter:*"
           - "org.mockito:*"
 
@@ -34,5 +34,3 @@ updates:
       github-actions:
         patterns:
           - "*"
-    labels:
-      - "ci"
