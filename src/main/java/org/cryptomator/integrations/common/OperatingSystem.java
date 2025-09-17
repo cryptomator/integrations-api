@@ -18,7 +18,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 @Repeatable(OperatingSystem.OperatingSystems.class)
-@ApiStatus.Experimental
 public @interface OperatingSystem {
 	Value value() default Value.UNKNOWN;
 
