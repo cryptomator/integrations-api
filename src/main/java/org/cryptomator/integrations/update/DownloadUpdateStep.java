@@ -19,11 +19,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.LongAdder;
 
-public abstract class DownloadUpdateProcess implements UpdateProcess {
+public abstract class DownloadUpdateStep implements UpdateStep {
 
-	protected final Path workDir;
-	private final String downloadFileName;
-	private final URI uri;
+	protected final URI source;
+	protected final Path destination;
 	private final byte[] checksum;
 	private final AtomicLong totalBytes;
 	private final LongAdder loadedBytes = new LongAdder();
@@ -33,22 +32,30 @@ public abstract class DownloadUpdateProcess implements UpdateProcess {
 
 	/**
 	 * Creates a new DownloadUpdateProcess instance.
-	 * @param workDir A temporary directory where to download the update file.
-	 * @param downloadFileName The name of the file to which the update will be downloaded
-	 * @param uri The URI from which the update will be downloaded.
+	 * @param source The URI from which the update will be downloaded.
+	 * @param destination The path to theworking directory where the downloaded file will be saved.
 	 * @param checksum (optional) The expected SHA-256 checksum of the downloaded file, can be null if not required.
 	 * @param estDownloadSize The estimated size of the download in bytes.
 	 */
-	protected DownloadUpdateProcess(Path workDir, String downloadFileName, URI uri, byte[] checksum, long estDownloadSize) {
-		this.workDir = workDir;
-		this.downloadFileName = downloadFileName;
-		this.uri = uri;
+	protected DownloadUpdateStep(URI source, Path destination, byte[] checksum, long estDownloadSize) {
+		this.source = source;
+		this.destination = destination;
 		this.checksum = checksum;
 		this.totalBytes = new AtomicLong(estDownloadSize);
 		this.downloadThread = Thread.ofVirtual().unstarted(this::download);
 	}
 
-	protected void startDownload() {
+	@Override
+	public String description() {
+		return switch (downloadThread.getState()) {
+			case NEW -> "Download... ";
+			case TERMINATED -> "Downloaded.";
+			default -> "Downloading... %1.0f%%".formatted(preparationProgress() * 100);
+		};
+	}
+
+	@Override
+	public void start() {
 		downloadThread.start();
 	}
 
@@ -72,25 +79,16 @@ public abstract class DownloadUpdateProcess implements UpdateProcess {
 		return downloadCompleted.await(timeout, unit);
 	}
 
-	protected boolean isDone() {
-		try {
-			return downloadCompleted.await(0, TimeUnit.MILLISECONDS);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-			return false;
-		}
-	}
-
 	@Override
 	public void cancel() {
 		downloadThread.interrupt();
 	}
 
-	private void download() {
-		try {
-			download(workDir.resolve(downloadFileName));
+	protected void download() {
+		var request = HttpRequest.newBuilder().uri(source).GET().build();
+		try (HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build()) {
+			downloadInternal(client, request);
 		} catch (IOException e) {
-			// TODO: eventually handle this via structured concurrency?
 			downloadException = e;
 		} finally {
 			downloadCompleted.countDown();
@@ -99,12 +97,12 @@ public abstract class DownloadUpdateProcess implements UpdateProcess {
 
 	/**
 	 * Downloads the update from the given URI and saves it to the specified filename in the working directory.
-	 * @param downloadPath The path to where to save the downloaded file.
+	 * @param client  the HttpClient to use for the download
+	 * @param request the HttpRequest which downloads the file
 	 * @throws IOException indicating I/O errors during the download or file writing process or due to checksum mismatch
 	 */
-	protected void download(Path downloadPath) throws IOException {
-		var request = HttpRequest.newBuilder().uri(uri).GET().build();
-		try (HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build()) { // TODO: make http client injectable?
+	protected void downloadInternal(HttpClient client, HttpRequest request) throws IOException {
+		try {
 			// make download request
 			var response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
 			if (response.statusCode() != 200) {
@@ -125,25 +123,18 @@ public abstract class DownloadUpdateProcess implements UpdateProcess {
 			// write bytes to file
 			try (var in = new DownloadInputStream(response.body(), loadedBytes, sha256);
 				 var src = Channels.newChannel(in);
-				 var dst = FileChannel.open(downloadPath, StandardOpenOption.WRITE, StandardOpenOption.CREATE_NEW)) {
+				 var dst = FileChannel.open(destination, StandardOpenOption.WRITE, StandardOpenOption.CREATE_NEW)) {
 				dst.transferFrom(src, 0, Long.MAX_VALUE);
 			}
 
 			// verify checksum if provided
 			byte[] calculatedChecksum = sha256.digest();
 			if (checksum != null && !MessageDigest.isEqual(calculatedChecksum, checksum)) {
-				throw new IOException("Checksum verification failed for downloaded file: " + downloadPath);
+				throw new IOException("Checksum verification failed for downloaded file: " + destination);
 			}
-
-			// post-download processing
-			postDownload(downloadPath);
 		} catch (InterruptedException e) {
 			throw new InterruptedIOException("Download interrupted");
 		}
-	}
-
-	protected void postDownload(Path downloadPath) throws IOException {
-		// Default implementation does nothing, can be overridden by subclasses for specific post-download actions
 	}
 
 	/**
@@ -163,7 +154,7 @@ public abstract class DownloadUpdateProcess implements UpdateProcess {
 		@Override
 		public int read(byte[] b, int off, int len) throws IOException {
 			int n = super.read(b, off, len);
-			if (n == -1) {
+			if (n != -1) {
 				digest.update(b, off, n);
 				counter.add(n);
 			}

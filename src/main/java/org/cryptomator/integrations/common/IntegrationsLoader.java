@@ -36,6 +36,19 @@ public class IntegrationsLoader {
 		return loadAll(clazz).findFirst();
 	}
 
+	/**
+	 * Loads a specific service provider by its implementation class name.
+	 * @param clazz Service class
+	 * @param implementationClassName fully qualified class name of the implementation
+	 * @return Optional of the service provider if found
+	 * @param <T> Type of the service
+	 */
+	public static <T> Optional<T> loadSpecific(Class<T> clazz, String implementationClassName) {
+		return ServiceLoader.load(clazz, ClassLoaderFactory.forPluginDir()).stream()
+				.filter(provider -> provider.type().getName().equals(implementationClassName))
+				.map(ServiceLoader.Provider::get)
+				.findAny();
+	}
 
 	/**
 	 * Loads all suited service providers ordered by priority in descending order.
