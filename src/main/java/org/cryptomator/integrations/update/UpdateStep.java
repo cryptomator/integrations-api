@@ -13,6 +13,19 @@ import java.util.function.Supplier;
 @ApiStatus.Experimental
 public interface UpdateStep {
 
+	/**
+	 * A magic constant indicating that the application shall terminate.
+	 * <p>
+	 * This step can be returned as the last step of the update process, usually immediately after a restart has been scheduled.
+	 */
+	UpdateStep EXIT = new NoopUpdateStep("Exiting...");
+
+	/**
+	 * A magic constant indicating that the update process shall be retried.
+	 */
+	UpdateStep RETRY = new NoopUpdateStep("Retry");
+
+
 	static UpdateStep of(String name, Callable<UpdateStep> nextStep) {
 		return new UpdateStepAdapter() {
 
@@ -89,6 +102,7 @@ public interface UpdateStep {
 	 * @return the next {@link UpdateStep step} of the update process or <code>null</code> if this was the final step.
 	 * @throws IllegalStateException if the update preparation is not complete or if the update process cannot be launched.
 	 * @throws IOException if the update preparation failed
+	 * @implSpec The returned {@link UpdateStep} must either be stateless or a new instance must be returned on each call.
 	 */
 	@Nullable
 	UpdateStep nextStep() throws IllegalStateException, IOException;
