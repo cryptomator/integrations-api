@@ -4,7 +4,9 @@ import org.cryptomator.integrations.common.IntegrationsLoader;
 import org.cryptomator.integrations.common.NamedServiceProvider;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Blocking;
+import org.jetbrains.annotations.Nullable;
 
+import java.net.http.HttpClient;
 import java.util.Optional;
 
 @ApiStatus.Experimental
@@ -34,11 +36,13 @@ public interface UpdateMechanism extends NamedServiceProvider {
 	/**
 	 * Checks whether an update is available.
 	 * @param currentVersion The full version string of the currently installed application, e.g. "1.2.3-beta4".
-	 * @return <code>true</code> if an update is available, <code>false</code> otherwise.
+	 * @param httpClient An HTTP client that can be used to check for updates.
+	 * @return An {@link UpdateInfo} if an update is available, or <code>null</code> otherwise.
 	 * @throws UpdateFailedException If the availability of an update could not be determined
 	 */
 	@Blocking
-	boolean isUpdateAvailable(String currentVersion) throws UpdateFailedException;
+	@Nullable
+	UpdateInfo checkForUpdate(String currentVersion, HttpClient httpClient) throws UpdateFailedException;
 
 	/**
 	 * Returns the first step to prepare the update. This can be anything like downloading the update, checking signatures, etc.

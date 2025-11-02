@@ -34,7 +34,7 @@
 
 		<!-- Test dependencies -->
 		<junit.version>5.12.1</junit.version>
-		<mockito.version>5.16.1</mockito.version>
+		<mockito.version>5.20.0</mockito.version>
 
 		<!-- Build dependencies -->
 		<mvn-compiler.version>3.14.0</mvn-compiler.version>
