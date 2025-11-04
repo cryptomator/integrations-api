@@ -10,7 +10,7 @@ import java.net.http.HttpClient;
 import java.util.Optional;
 
 @ApiStatus.Experimental
-public interface UpdateMechanism extends NamedServiceProvider {
+public interface UpdateMechanism<T extends UpdateInfo> extends NamedServiceProvider {
 
 	String UPDATE_MECHANISM_PROPERTY = "cryptomator.updateMechanism";
 
@@ -42,13 +42,14 @@ public interface UpdateMechanism extends NamedServiceProvider {
 	 */
 	@Blocking
 	@Nullable
-	UpdateInfo checkForUpdate(String currentVersion, HttpClient httpClient) throws UpdateFailedException;
+	T checkForUpdate(String currentVersion, HttpClient httpClient) throws UpdateFailedException;
 
 	/**
 	 * Returns the first step to prepare the update. This can be anything like downloading the update, checking signatures, etc.
+	 * @param updateInfo The {@link UpdateInfo} representing the update to be prepared.
 	 * @return a new {@link UpdateStep} that can be used to monitor the progress of the update preparation. The task will complete when the preparation is done.
 	 * @throws UpdateFailedException If no update process can be started, e.g. due to network or I/O issues.
 	 */
-	UpdateStep firstStep() throws UpdateFailedException;
+	UpdateStep firstStep(T updateInfo) throws UpdateFailedException;
 
 }
