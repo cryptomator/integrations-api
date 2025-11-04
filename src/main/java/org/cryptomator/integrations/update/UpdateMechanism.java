@@ -4,16 +4,18 @@ import org.cryptomator.integrations.common.IntegrationsLoader;
 import org.cryptomator.integrations.common.NamedServiceProvider;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Blocking;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.http.HttpClient;
 import java.util.Optional;
 
 @ApiStatus.Experimental
-public interface UpdateMechanism<T extends UpdateInfo> extends NamedServiceProvider {
+public interface UpdateMechanism<T extends UpdateInfo<T>> extends NamedServiceProvider {
 
 	String UPDATE_MECHANISM_PROPERTY = "cryptomator.updateMechanism";
 
+	@SuppressWarnings("rawtypes")
 	static Optional<UpdateMechanism> get() {
 		return Optional.ofNullable(System.getProperty(UPDATE_MECHANISM_PROPERTY))
 				.flatMap(name -> IntegrationsLoader.loadSpecific(UpdateMechanism.class, name));
@@ -50,6 +52,7 @@ public interface UpdateMechanism<T extends UpdateInfo> extends NamedServiceProvi
 	 * @return a new {@link UpdateStep} that can be used to monitor the progress of the update preparation. The task will complete when the preparation is done.
 	 * @throws UpdateFailedException If no update process can be started, e.g. due to network or I/O issues.
 	 */
+	@NotNull
 	UpdateStep firstStep(T updateInfo) throws UpdateFailedException;
 
 }

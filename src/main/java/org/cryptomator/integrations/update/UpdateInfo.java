@@ -1,11 +1,8 @@
 package org.cryptomator.integrations.update;
 
-public interface UpdateInfo {
+import org.jetbrains.annotations.NotNull;
 
-	static UpdateInfo of(String version, UpdateMechanism updateMechanism) {
-		record UpdateInfoImpl(String version, UpdateMechanism updateMechanism) implements UpdateInfo {}
-		return new UpdateInfoImpl(version, updateMechanism);
-	}
+public interface UpdateInfo<T extends UpdateInfo<T>> {
 
 	/**
 	 * @return The version string of the available update.
@@ -15,5 +12,16 @@ public interface UpdateInfo {
 	/**
 	 * @return The update mechanism that provided this update info.
 	 */
-	UpdateMechanism updateMechanism();
+	UpdateMechanism<T> updateMechanism();
+
+	/**
+	 * Typesafe equivalent to {@code updateMechanism().firstStep(this)}.
+	 * @return Result of {@link UpdateMechanism#firstStep(UpdateInfo)}.
+	 * @throws UpdateFailedException If no update process can be started, e.g. due to network or I/O issues.
+	 */
+	@NotNull
+	default UpdateStep useToPrepareFirstStep() throws UpdateFailedException {
+		@SuppressWarnings("unchecked") T self = (T) this;
+		return updateMechanism().firstStep(self);
+	}
 }
