@@ -12,6 +12,8 @@ import org.cryptomator.integrations.update.UpdateMechanism;
 module org.cryptomator.integrations.api {
 	requires static org.jetbrains.annotations;
 	requires org.slf4j;
+	requires com.fasterxml.jackson.databind;
+	requires com.fasterxml.jackson.datatype.jsr310;
 	requires java.net.http;
 
 	exports org.cryptomator.integrations.autostart;

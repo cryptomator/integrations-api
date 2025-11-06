@@ -30,6 +30,7 @@
 		<jdk.version>21</jdk.version>
 
 		<slf4j.version>2.0.17</slf4j.version>
+		<jackson.version>2.20.0</jackson.version>
 		<jetbrains-annotation.version>26.0.2-1</jetbrains-annotation.version>
 
 		<!-- Test dependencies -->
@@ -58,6 +59,16 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>${jackson.version}</version>
 		</dependency>
 
 		<dependency>

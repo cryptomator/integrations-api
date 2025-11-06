@@ -1,5 +1,7 @@
 package org.cryptomator.integrations.update;
 
+import org.cryptomator.integrations.Localization;
+
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,9 +50,9 @@ public abstract class DownloadUpdateStep implements UpdateStep {
 	@Override
 	public String description() {
 		return switch (downloadThread.getState()) {
-			case NEW -> "Download... ";
-			case TERMINATED -> "Downloaded.";
-			default -> "Downloading... %1.0f%%".formatted(preparationProgress() * 100);
+			case NEW -> Localization.get().getString("org.cryptomator.api.update.download.new");
+			case TERMINATED -> Localization.get().getString("org.cryptomator.api.update.download.done");
+			default -> Localization.get().getString("org.cryptomator.api.update.download.progress").formatted(preparationProgress() * 100);
 		};
 	}
 

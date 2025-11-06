@@ -1,5 +1,6 @@
 package org.cryptomator.integrations.update;
 
+import org.cryptomator.integrations.Localization;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NonBlocking;
 import org.jetbrains.annotations.Nullable;
@@ -18,12 +19,12 @@ public interface UpdateStep {
 	 * <p>
 	 * This step can be returned as the last step of the update process, usually immediately after a restart has been scheduled.
 	 */
-	UpdateStep EXIT = new NoopUpdateStep("Exiting...");
+	UpdateStep EXIT = new NoopUpdateStep(Localization.get().getString("org.cryptomator.api.update.updateStep.EXIT"));
 
 	/**
 	 * A magic constant indicating that the update process shall be retried.
 	 */
-	UpdateStep RETRY = new NoopUpdateStep("Retry");
+	UpdateStep RETRY = new NoopUpdateStep(Localization.get().getString("org.cryptomator.api.update.updateStep.RETRY"));
 
 
 	static UpdateStep of(String name, Callable<UpdateStep> nextStep) {
@@ -95,13 +96,11 @@ public interface UpdateStep {
 	}
 
 	/**
-	 * Once the update preparation is complete, this method can be called to launch the external update process.
-	 * <p>
-	 * This method shall be called after making sure that the application is ready to be restarted, e.g. after locking all vaults.
+	 * After running this step to completion, this method returns the next step of the update process.
 	 *
 	 * @return the next {@link UpdateStep step} of the update process or <code>null</code> if this was the final step.
-	 * @throws IllegalStateException if the update preparation is not complete or if the update process cannot be launched.
-	 * @throws IOException if the update preparation failed
+	 * @throws IllegalStateException if this step didn't complete yet or other preconditions aren't met.
+	 * @throws IOException indicating an error before reaching the next step, e.g. during execution of this step.
 	 * @implSpec The returned {@link UpdateStep} must either be stateless or a new instance must be returned on each call.
 	 */
 	@Nullable
