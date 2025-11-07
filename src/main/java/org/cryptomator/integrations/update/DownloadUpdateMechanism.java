@@ -104,10 +104,11 @@ public abstract class DownloadUpdateMechanism implements UpdateMechanism<Downloa
 		private final DownloadUpdateInfo updateInfo;
 
 		public FirstStep(Path workDir, DownloadUpdateInfo updateInfo) {
-			super(URI.create(updateInfo.asset().downloadUrl),
-					workDir.resolve(updateInfo.asset().name),
-					HexFormat.of().withLowerCase().parseHex(updateInfo.asset().digest.substring(7)), // remove "sha256:" prefix
-					updateInfo.asset().size);
+			var uri = URI.create(updateInfo.asset().downloadUrl);
+			var destination = workDir.resolve(updateInfo.asset().name);
+			var digest = HexFormat.of().withLowerCase().parseHex(updateInfo.asset().digest.substring(7)); // remove "sha256:" prefix
+			var size = updateInfo.asset().size;
+			super(uri, destination, digest, size);
 			this.workDir = workDir;
 			this.updateInfo = updateInfo;
 		}
