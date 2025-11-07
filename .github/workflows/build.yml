@@ -33,7 +33,7 @@ jobs:
           subject-path: |
             target/*.jar
             target/*.pom
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: artifacts
           path: target/*.jar
