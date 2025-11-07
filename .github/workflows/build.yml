@@ -11,6 +11,9 @@ jobs:
   build:
     name: Build and Test
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for the attestations step
+      attestations: write # Required for the attestations step
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-java@v5
@@ -38,6 +41,7 @@ jobs:
   deploy-central:
     name: Deploy to Maven Central
     runs-on: ubuntu-latest
+    permissions: {}
     needs: [build]
     if: github.repository_owner == 'cryptomator' && (startsWith(github.ref, 'refs/tags/') || contains(github.event.head_commit.message, '[deploy]'))
     steps:
@@ -54,9 +58,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           PROJECT_VERSION=$(mvn help:evaluate "-Dexpression=project.version" -q -DforceStdout)
-          test "$PROJECT_VERSION" = "$TAG_NAME"
-        env:
-          TAG_NAME: ${{ github.event.release.tag_name }}
+          test "$PROJECT_VERSION" = "${GITHUB_REF##*/}"
       - name: Deploy to Maven Central
         run: mvn deploy -B -DskipTests -Psign,deploy-central --no-transfer-progress
         env:
@@ -69,6 +71,8 @@ jobs:
   deploy-github:
     name: Deploy to GitHub Packages
     runs-on: ubuntu-latest
+    permissions:
+      packages: write # Required for the deploy to GitHub Packages step
     needs: [build]
     if: github.repository_owner == 'cryptomator' && (startsWith(github.ref, 'refs/tags/') || contains(github.event.head_commit.message, '[deploy]'))
     steps:
@@ -76,15 +80,13 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: temurin
+          distribution: 'temurin'
           cache: 'maven'
       - name: Verify project version matches tag
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           PROJECT_VERSION=$(mvn help:evaluate "-Dexpression=project.version" -q -DforceStdout)
-          test "$PROJECT_VERSION" = "$TAG_NAME"
-        env:
-          TAG_NAME: ${{ github.event.release.tag_name }}
+          test "$PROJECT_VERSION" = "${GITHUB_REF##*/}"
       - name: Deploy to GitHub Packages
         run: mvn deploy -B -DskipTests -Psign,deploy-github --no-transfer-progress
         env:
@@ -96,6 +98,8 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required for the release step
     needs: [deploy-central, deploy-github]
     if: startsWith(github.ref, 'refs/tags/')
     steps:
