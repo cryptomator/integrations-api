@@ -1,6 +1,7 @@
 package org.cryptomator.integrations.update;
 
 import org.cryptomator.integrations.Localization;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.FilterInputStream;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
@@ -35,11 +37,11 @@ public abstract class DownloadUpdateStep implements UpdateStep {
 	/**
 	 * Creates a new DownloadUpdateProcess instance.
 	 * @param source The URI from which the update will be downloaded.
-	 * @param destination The path to theworking directory where the downloaded file will be saved.
+	 * @param destination The path where to save the downloaded file.
 	 * @param checksum (optional) The expected SHA-256 checksum of the downloaded file, can be null if not required.
 	 * @param estDownloadSize The estimated size of the download in bytes.
 	 */
-	protected DownloadUpdateStep(URI source, Path destination, byte[] checksum, long estDownloadSize) {
+	protected DownloadUpdateStep(URI source, Path destination, @Nullable byte[] checksum, long estDownloadSize) {
 		this.source = source;
 		this.destination = destination;
 		this.checksum = checksum;
@@ -88,7 +90,7 @@ public abstract class DownloadUpdateStep implements UpdateStep {
 
 	protected void download() {
 		var request = HttpRequest.newBuilder().uri(source).GET().build();
-		try (HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build()) {
+		try (HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).connectTimeout(Duration.ofSeconds(10)).build()) {
 			downloadInternal(client, request);
 		} catch (IOException e) {
 			downloadException = e;

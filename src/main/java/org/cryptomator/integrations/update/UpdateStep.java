@@ -67,7 +67,7 @@ public interface UpdateStep {
 	void cancel();
 
 	/**
-	 * Blocks the current thread until this update step completed or an error occured.
+	 * Blocks the current thread until this update step completed or an error occurred.
 	 * <p>
 	 * If the step is already complete, this method returns immediately.
 	 *
@@ -76,7 +76,7 @@ public interface UpdateStep {
 	void await() throws InterruptedException;
 
 	/**
-	 * Blocks the current thread until this update step completed or an error occured, or until the specified timeout expires.
+	 * Blocks the current thread until this update step completed or an error occurred, or until the specified timeout expires.
 	 * <p>
 	 * If the step is already complete, this method returns immediately.
 	 *

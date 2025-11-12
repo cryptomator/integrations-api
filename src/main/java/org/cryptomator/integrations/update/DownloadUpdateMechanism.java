@@ -22,7 +22,7 @@ import java.util.List;
 
 public abstract class DownloadUpdateMechanism implements UpdateMechanism<DownloadUpdateInfo> {
 
-	private static final Logger LOG = LoggerFactory .getLogger(DownloadUpdateMechanism.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DownloadUpdateMechanism.class);
 	private static final String LATEST_VERSION_API_URL = "https://api.cryptomator.org/connect/apps/desktop/latest-version?format=1";
 	private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -32,7 +32,8 @@ public abstract class DownloadUpdateMechanism implements UpdateMechanism<Downloa
 			HttpRequest request = HttpRequest.newBuilder().uri(URI.create(LATEST_VERSION_API_URL)).build();
 			HttpResponse<InputStream> response = httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream());
 			if (response.statusCode() != 200) {
-				throw new RuntimeException("Failed to fetch release: " + response.statusCode());
+				LOG.warn("Failed to fetch release: HTTP {}", response.statusCode());
+				return null;
 			}
 			var release = MAPPER.readValue(response.body(), LatestVersionResponse.class);
 			return checkForUpdate(currentVersion, release);
@@ -94,7 +95,7 @@ public abstract class DownloadUpdateMechanism implements UpdateMechanism<Downloa
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public record Asset(
 			@JsonProperty("name") String name,
-			@JsonProperty("digest") String digest, // TODO: verify this starts with "sha256:"?
+			@JsonProperty("digest") String digest,
 			@JsonProperty("size") long size,
 			@JsonProperty("downloadUrl") String downloadUrl
 	) {}
@@ -106,7 +107,9 @@ public abstract class DownloadUpdateMechanism implements UpdateMechanism<Downloa
 		public FirstStep(Path workDir, DownloadUpdateInfo updateInfo) {
 			var uri = URI.create(updateInfo.asset().downloadUrl);
 			var destination = workDir.resolve(updateInfo.asset().name);
-			var digest = HexFormat.of().withLowerCase().parseHex(updateInfo.asset().digest.substring(7)); // remove "sha256:" prefix
+			var digest = updateInfo.asset().digest().startsWith("sha256:")
+					? HexFormat.of().withLowerCase().parseHex(updateInfo.asset().digest.substring(7)) // remove "sha256:" prefix
+					: null;
 			var size = updateInfo.asset().size;
 			super(uri, destination, digest, size);
 			this.workDir = workDir;
