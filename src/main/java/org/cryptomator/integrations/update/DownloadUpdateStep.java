@@ -13,6 +13,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
@@ -54,7 +55,14 @@ public abstract class DownloadUpdateStep implements UpdateStep {
 		return switch (downloadThread.getState()) {
 			case NEW -> Localization.get().getString("org.cryptomator.api.update.download.new");
 			case TERMINATED -> Localization.get().getString("org.cryptomator.api.update.download.done");
-			default -> Localization.get().getString("org.cryptomator.api.update.download.progress").formatted(preparationProgress() * 100);
+			default -> {
+				double progress = preparationProgress();
+				if (progress < 0.0) {
+					yield Localization.get().getString("org.cryptomator.api.update.download.indeterminateProgress");
+				} else {
+					yield Localization.get().getString("org.cryptomator.api.update.download.progress").formatted(progress * 100.0);
+				}
+			}
 		};
 	}
 
@@ -86,6 +94,11 @@ public abstract class DownloadUpdateStep implements UpdateStep {
 	@Override
 	public void cancel() {
 		downloadThread.interrupt();
+		try {
+			Files.deleteIfExists(destination);
+		} catch (IOException e) {
+			// ignore, this is a best-effort cleanup
+		}
 	}
 
 	protected void download() {
@@ -119,7 +132,7 @@ public abstract class DownloadUpdateStep implements UpdateStep {
 			// prepare checksum calculation
 			MessageDigest sha256;
 			try {
-				sha256 = MessageDigest.getInstance("SHA-256"); // Initialize SHA-256 digest, not used here but can be extended for checksum validation
+				sha256 = MessageDigest.getInstance("SHA-256");
 			} catch (NoSuchAlgorithmException e) {
 				throw new AssertionError("Every implementation of the Java platform is required to support [...] SHA-256", e);
 			}

@@ -68,6 +68,7 @@ public interface UpdateStep {
 
 	/**
 	 * Blocks the current thread until this update step completed or an error occurred.
+	 * If this step failed, an exception will be rethrown as soon as attempting to invoke {@link #nextStep()}.
 	 * <p>
 	 * If the step is already complete, this method returns immediately.
 	 *
@@ -77,6 +78,7 @@ public interface UpdateStep {
 
 	/**
 	 * Blocks the current thread until this update step completed or an error occurred, or until the specified timeout expires.
+	 * If this step failed, an exception will be rethrown as soon as attempting to invoke {@link #nextStep()}.
 	 * <p>
 	 * If the step is already complete, this method returns immediately.
 	 *
