@@ -11,7 +11,7 @@ Changes to prior versions can be found on the [Github release page](https://gith
 
 ### Added
 
-* Experimental [Update API](https://github.com/cryptomator/integrations-api/blob/a052dd06a38f5410f6d9c9c7061c036efee83480/src/main/java/org/cryptomator/integrations/update/UpdateMechanism.java)
+* Experimental [Update API](https://github.com/cryptomator/integrations-api/blob/a522f36cf45884127e2431dd18222391669d5992/src/main/java/org/cryptomator/integrations/update/UpdateMechanism.java) (#72)
 
 ## [1.7.0](https://github.com/cryptomator/integrations-api/releases/tag/1.7.0) - 2025-09-17
 
