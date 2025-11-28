@@ -1,15 +1,10 @@
 package org.cryptomator.integrations.notify;
 
 import org.cryptomator.integrations.common.IntegrationsLoader;
-import org.cryptomator.integrations.common.NamedServiceProvider;
 
 import java.util.stream.Stream;
 
-/**
- * Service for sending a notification to the user.
- */
-@FunctionalInterface
-public interface NotifyService extends NamedServiceProvider {
+public interface NotifyService {
 
 	/**
 	 * Sends a notification to the user.
@@ -24,20 +19,20 @@ public interface NotifyService extends NamedServiceProvider {
 	 *
 	 * @param header      Header of the notification
 	 * @param description Description of the notification
-	 * @param actions     Zero or more {@link Action}s the user can trigger/interact in the notification
+	 * @param actions     Zero or more {@link NotifyService.Action}s the user can trigger/interact in the notification
 	 * @throws NotifyServiceException if an error on displaying the notificaiton occurs
 	 */
-	void sendNotification(String header, String description, Action... actions) throws NotifyServiceException;
+	void sendNotification(String header, String description, NotifyService.Action... actions) throws NotifyServiceException;
 
 	/**
 	 * Record representing possible actions for a notification.
 	 * <p>
 	 * Performing the actions should invoke the callback.
 	 *
-	 * @param actionDescription short description what the action does
-	 * @param actionCallback    execution of the action
+	 * @param label _short_ description of the action
+	 * @param returnMessage    message sent on action execution
 	 */
-	record Action(String actionDescription, Runnable actionCallback) {
+	record Action(String label, String returnMessage) {
 	}
 
 
