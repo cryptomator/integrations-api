@@ -34,7 +34,7 @@
 		<jetbrains-annotation.version>26.0.2-1</jetbrains-annotation.version>
 
 		<!-- Test dependencies -->
-		<junit.version>6.0.0</junit.version>
+		<junit.version>6.0.1</junit.version>
 		<mockito.version>5.20.0</mockito.version>
 
 		<!-- Build dependencies -->
