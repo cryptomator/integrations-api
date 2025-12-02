@@ -4,7 +4,9 @@ import org.cryptomator.integrations.common.IntegrationsLoader;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Range;
 
+import java.nio.file.FileSystemException;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -85,6 +87,18 @@ public interface MountService {
 	 * @return New mount builder
 	 */
 	@Contract("_ -> new")
-	MountBuilder forFileSystem(Path fileSystemRoot);
+	default MountBuilder forFileSystem(Path fileSystemRoot) {
+		return forFileSystem(fileSystemRoot, Map.of());
+	};
+
+	/**
+	 * Creates a new mount builder.
+	 *
+	 * @param fileSystemRoot The root of the VFS to be mounted
+	 * @param secretKnowledge Mapping of fs specific exceptions, only known by lib consumer
+	 * @return New mount builder
+	 */
+	@Contract("_ -> new")
+	MountBuilder forFileSystem(Path fileSystemRoot, Map<Class<? extends FileSystemException>, ?> secretKnowledge);
 
 }
