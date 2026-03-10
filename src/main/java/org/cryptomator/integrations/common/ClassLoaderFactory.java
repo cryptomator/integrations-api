@@ -67,7 +67,7 @@ class ClassLoaderFactory {
 	@Contract(value = "_ -> new", pure = true)
 	static URLClassLoader forPluginDirWithPath(Path path) throws UncheckedIOException {
 		var jars = findJars(path);
-		if (LOG.isDebugEnabled()) {
+		if (LOG.isDebugEnabled() && jars.length != 0) {
 			String jarList = Arrays.stream(jars).map(URL::getPath).collect(Collectors.joining(", "));
 			LOG.debug("Found jars in cryptomator.pluginDir: {}", jarList);
 		}
@@ -79,7 +79,7 @@ class ClassLoaderFactory {
 		try (var stream = Files.walk(path)) {
 			return stream.filter(ClassLoaderFactory::isJarFile).map(ClassLoaderFactory::toUrl).toArray(URL[]::new);
 		} catch (IOException | UncheckedIOException e) {
-			// unable to locate any jars // TODO: log a warning?
+			LOG.debug("Failed to read plugin dir {}", path, e);
 			return new URL[0];
 		}
 	}
