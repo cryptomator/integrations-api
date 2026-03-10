@@ -13,6 +13,7 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 class ClassLoaderFactory {
@@ -20,6 +21,23 @@ class ClassLoaderFactory {
 	private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderFactory.class);
 	private static final String PLUGIN_DIR_KEY = "cryptomator.pluginDir";
 	private static final String JAR_SUFFIX = ".jar";
+	private static final AtomicReference<URLClassLoader> CLASSLOADER_CACHE = new AtomicReference<>(null);
+
+	/**
+	 * Attempts to find {@code .jar} files in the path specified in {@value #PLUGIN_DIR_KEY} system property.
+	 * Returns the cached class loader instance. If no instance is cached, creates a new instance with {@link #forPluginDir()} and caches it.
+	 *
+	 * @return A URLClassLoader that is aware of all {@code .jar} files in the plugin dir
+	 */
+	@Contract(value = "-> _", pure = false)
+	public synchronized static URLClassLoader forPluginDirCached() {
+		var ucl = CLASSLOADER_CACHE.get();
+		if (ucl == null) {
+			ucl = forPluginDir();
+			CLASSLOADER_CACHE.set(ucl);
+		}
+		return ucl;
+	}
 
 	/**
 	 * Attempts to find {@code .jar} files in the path specified in {@value #PLUGIN_DIR_KEY} system property.
