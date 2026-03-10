@@ -13,7 +13,6 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 class ClassLoaderFactory {
@@ -21,7 +20,8 @@ class ClassLoaderFactory {
 	private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderFactory.class);
 	private static final String PLUGIN_DIR_KEY = "cryptomator.pluginDir";
 	private static final String JAR_SUFFIX = ".jar";
-	private static final AtomicReference<URLClassLoader> CLASSLOADER_CACHE = new AtomicReference<>(null);
+
+	private static URLClassLoader CACHED_CLASSLOADER = null;
 
 	/**
 	 * Attempts to find {@code .jar} files in the path specified in {@value #PLUGIN_DIR_KEY} system property.
@@ -31,12 +31,10 @@ class ClassLoaderFactory {
 	 */
 	@Contract(value = "-> _", pure = false)
 	public synchronized static URLClassLoader forPluginDirCached() {
-		var ucl = CLASSLOADER_CACHE.get();
-		if (ucl == null) {
-			ucl = forPluginDir();
-			CLASSLOADER_CACHE.set(ucl);
+		if (CACHED_CLASSLOADER == null) {
+			CACHED_CLASSLOADER = forPluginDir();
 		}
-		return ucl;
+		return CACHED_CLASSLOADER;
 	}
 
 	/**
