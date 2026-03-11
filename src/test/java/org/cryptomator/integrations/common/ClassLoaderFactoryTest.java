@@ -144,6 +144,70 @@ public class ClassLoaderFactoryTest {
 
 	}
 
+	@Nested
+	@DisplayName("forCachedPluginDir()")
+	public class CachedPluginDir {
+
+		MockedStatic<ClassLoaderFactory> mockedClass;
+
+		@BeforeEach
+		public void beforeEach() {
+			ClassLoaderFactory.CACHED_PLUGIN_DIR = null;
+			ClassLoaderFactory.CACHED_CLASSLOADER = null;
+			System.clearProperty("cryptomator.pluginDir");
+			mockedClass = Mockito.mockStatic(ClassLoaderFactory.class);
+			mockedClass.when(() -> ClassLoaderFactory.forCachedPluginDir()).thenCallRealMethod();
+		}
+
+		@AfterEach
+		public void afterEach() {
+			mockedClass.close();
+			ClassLoaderFactory.CACHED_PLUGIN_DIR = null;
+			ClassLoaderFactory.CACHED_CLASSLOADER = null;
+			System.clearProperty("cryptomator.pluginDir");
+		}
+
+		@Test
+		@DisplayName("returns cached classloader on subsequent calls with same property")
+		public void testReturnsCachedInstance() {
+			var ucl = Mockito.mock(URLClassLoader.class, "ucl");
+			mockedClass.when(() -> ClassLoaderFactory.forPluginDir()).thenReturn(ucl);
+
+			System.setProperty("cryptomator.pluginDir", "/some/path");
+			var first = ClassLoaderFactory.forCachedPluginDir();
+			var second = ClassLoaderFactory.forCachedPluginDir();
+
+			Assertions.assertSame(first, second);
+			mockedClass.verify(() -> ClassLoaderFactory.forPluginDir(), Mockito.times(1));
+		}
+
+		@Test
+		@DisplayName("creates new classloader when property changes")
+		public void testInvalidatesCacheOnPropertyChange() {
+			var ucl1 = Mockito.mock(URLClassLoader.class, "ucl1");
+			var ucl2 = Mockito.mock(URLClassLoader.class, "ucl2");
+			var ucl3 = Mockito.mock(URLClassLoader.class, "ucl3");
+			mockedClass.when(() -> ClassLoaderFactory.forPluginDir()).thenReturn(ucl1, ucl2, ucl3);
+
+			System.setProperty("cryptomator.pluginDir", "/path/one");
+			var first = ClassLoaderFactory.forCachedPluginDir();
+
+			System.setProperty("cryptomator.pluginDir", "/path/two");
+			var second = ClassLoaderFactory.forCachedPluginDir();
+
+			System.clearProperty("cryptomator.pluginDir");
+			var third = ClassLoaderFactory.forCachedPluginDir();
+
+			Assertions.assertSame(ucl1, first);
+			Assertions.assertSame(ucl2, second);
+			Assertions.assertSame(ucl3, third);
+			Assertions.assertNotSame(first, second);
+			Assertions.assertNotSame(second, third);
+			Assertions.assertNotSame(first, third);
+			mockedClass.verify(() -> ClassLoaderFactory.forPluginDir(), Mockito.times(3));
+		}
+	}
+
 	@Test
 	@DisplayName("findJars returns empty list if not containing jars")
 	public void testFindJars1(@TempDir Path tmpDir) throws IOException {

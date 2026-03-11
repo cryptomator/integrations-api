@@ -44,7 +44,7 @@ public class IntegrationsLoader {
 	 * @param <T> Type of the service
 	 */
 	public static <T> Optional<T> loadSpecific(Class<T> clazz, String implementationClassName) {
-		return ServiceLoader.load(clazz, ClassLoaderFactory.forPluginDirCached()).stream()
+		return ServiceLoader.load(clazz, ClassLoaderFactory.forCachedPluginDir()).stream()
 				.filter(provider -> provider.type().getName().equals(implementationClassName))
 				.map(ServiceLoader.Provider::get)
 				.findAny();
@@ -61,7 +61,7 @@ public class IntegrationsLoader {
 	 * @return An ordered stream of all suited service providers
 	 */
 	public static <T> Stream<T> loadAll(Class<T> clazz) {
-		return loadAll(ServiceLoader.load(clazz, ClassLoaderFactory.forPluginDirCached()), clazz);
+		return loadAll(ServiceLoader.load(clazz, ClassLoaderFactory.forCachedPluginDir()), clazz);
 	}
 
 	/**

@@ -13,6 +13,7 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 class ClassLoaderFactory {
@@ -21,17 +22,24 @@ class ClassLoaderFactory {
 	private static final String PLUGIN_DIR_KEY = "cryptomator.pluginDir";
 	private static final String JAR_SUFFIX = ".jar";
 
-	private static URLClassLoader CACHED_CLASSLOADER = null;
+	@VisibleForTesting
+	static String CACHED_PLUGIN_DIR = null;
+	@VisibleForTesting
+	static URLClassLoader CACHED_CLASSLOADER = null;
 
 	/**
-	 * Attempts to find {@code .jar} files in the path specified in {@value #PLUGIN_DIR_KEY} system property.
-	 * Returns the cached class loader instance. If no instance is cached, creates a new instance with {@link #forPluginDir()} and caches it.
+	 * Returns the cached class loader instance.
+	 * <p>
+	 * The returned instance does not recheck the pluginDir for updates.
+	 * If no instance is cached or the system property changed, creates a new instance with {@link #forPluginDir()} and caches it.
 	 *
-	 * @return A URLClassLoader that is aware of all {@code .jar} files in the plugin dir
+	 * @return The cached URLClassLoader that is aware of all {@code .jar} files in the plugin dir at the creation time of the instance
 	 */
 	@Contract(value = "-> _", pure = false)
-	public synchronized static URLClassLoader forPluginDirCached() {
-		if (CACHED_CLASSLOADER == null) {
+	public synchronized static URLClassLoader forCachedPluginDir() {
+		String currentPluginDir = System.getProperty(PLUGIN_DIR_KEY);
+		if (CACHED_CLASSLOADER == null || !Objects.equals(CACHED_PLUGIN_DIR, currentPluginDir)) {
+			CACHED_PLUGIN_DIR = currentPluginDir;
 			CACHED_CLASSLOADER = forPluginDir();
 		}
 		return CACHED_CLASSLOADER;
