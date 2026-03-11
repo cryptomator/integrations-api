@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
@@ -90,6 +91,7 @@ public class ClassLoaderFactoryTest {
 		var absPath = "/there/will/be/plugins";
 		try (var mockedClass = Mockito.mockStatic(ClassLoaderFactory.class)) {
 			mockedClass.when(() -> ClassLoaderFactory.forPluginDir()).thenCallRealMethod();
+			mockedClass.when(() -> ClassLoaderFactory.forPluginDirInternal(any())).thenCallRealMethod();
 			mockedClass.when(() -> ClassLoaderFactory.forPluginDirWithPath(Path.of(absPath))).thenReturn(ucl);
 
 			System.setProperty("cryptomator.pluginDir", absPath);
@@ -100,16 +102,14 @@ public class ClassLoaderFactoryTest {
 	}
 
 	@Nested
-	@DisplayName("when the system property contains invalid values")
-	public class InvalidSystemProperty {
-
+	@DisplayName("Method pluginDirInternal")
+	public class PluginDirInternal {
 		MockedStatic<ClassLoaderFactory> mockedClass;
 
 		@BeforeEach
 		public void beforeEach() {
 			mockedClass = Mockito.mockStatic(ClassLoaderFactory.class);
-			mockedClass.when(() -> ClassLoaderFactory.forPluginDir()).thenCallRealMethod();
-			mockedClass.when(() -> ClassLoaderFactory.forPluginDirWithPath(any())).thenReturn(null);
+			mockedClass.when(() -> ClassLoaderFactory.forPluginDirInternal(any())).thenCallRealMethod();
 		}
 
 		@AfterEach
@@ -117,25 +117,24 @@ public class ClassLoaderFactoryTest {
 			mockedClass.close();
 		}
 
-
 		@Test
-		@DisplayName("Undefined cryptomator.pluginDir returns empty URLClassLoader")
-		public void testUndefinedSysProp() {
-			System.clearProperty("cryptomator.pluginDir");
-			var result = ClassLoaderFactory.forPluginDir();
+		@DisplayName("Valid path string calls forPluginDirWithPath")
+		public void testValidPathString() {
+			var ucl = Mockito.mock(URLClassLoader.class, "ucl");
+			mockedClass.when(() -> ClassLoaderFactory.forPluginDirWithPath(any())).thenReturn(ucl);
 
-			mockedClass.verify(() -> ClassLoaderFactory.forPluginDirWithPath(any()), never());
-			Assertions.assertNotNull(result);
-			Assertions.assertEquals(0, result.getURLs().length);
+			var result = ClassLoaderFactory.forPluginDirInternal("some/string");
+			mockedClass.verify(() -> ClassLoaderFactory.forPluginDirWithPath(any()));
+			Assertions.assertSame(ucl, result);
 		}
 
 		@ParameterizedTest
-		@DisplayName("Property cryptomator.pluginDir filled with blanks returns empty URLClassLoader")
+		@DisplayName("Invalid or null path strings do not call forPluginDirWithPath")
 		@EmptySource
 		@ValueSource(strings = {"\t\t", "  "})
-		public void testBlankSysProp(String propValue) {
-			System.setProperty("cryptomator.pluginDir", propValue);
-			var result = ClassLoaderFactory.forPluginDir();
+		@NullSource
+		public void testInvalidPathString(String propValue) {
+			var result = ClassLoaderFactory.forPluginDirInternal(propValue);
 
 			mockedClass.verify(() -> ClassLoaderFactory.forPluginDirWithPath(any()), never());
 			Assertions.assertNotNull(result);
@@ -145,25 +144,23 @@ public class ClassLoaderFactoryTest {
 	}
 
 	@Nested
-	@DisplayName("forCachedPluginDir()")
-	public class CachedPluginDir {
+	@DisplayName("Method pluginDirFromCache")
+	public class PluginDirFromCache {
 
 		MockedStatic<ClassLoaderFactory> mockedClass;
 
 		@BeforeEach
 		public void beforeEach() {
-			ClassLoaderFactory.CACHED_PLUGIN_DIR = null;
-			ClassLoaderFactory.CACHED_CLASSLOADER = null;
+			ClassLoaderFactory.CACHE = null;
 			System.clearProperty("cryptomator.pluginDir");
 			mockedClass = Mockito.mockStatic(ClassLoaderFactory.class);
-			mockedClass.when(() -> ClassLoaderFactory.forCachedPluginDir()).thenCallRealMethod();
+			mockedClass.when(() -> ClassLoaderFactory.forPluginDirFromCache()).thenCallRealMethod();
 		}
 
 		@AfterEach
 		public void afterEach() {
 			mockedClass.close();
-			ClassLoaderFactory.CACHED_PLUGIN_DIR = null;
-			ClassLoaderFactory.CACHED_CLASSLOADER = null;
+			ClassLoaderFactory.CACHE = null;
 			System.clearProperty("cryptomator.pluginDir");
 		}
 
@@ -171,14 +168,14 @@ public class ClassLoaderFactoryTest {
 		@DisplayName("returns cached classloader on subsequent calls with same property")
 		public void testReturnsCachedInstance() {
 			var ucl = Mockito.mock(URLClassLoader.class, "ucl");
-			mockedClass.when(() -> ClassLoaderFactory.forPluginDir()).thenReturn(ucl);
+			mockedClass.when(() -> ClassLoaderFactory.forPluginDirInternal(any())).thenReturn(ucl);
 
 			System.setProperty("cryptomator.pluginDir", "/some/path");
-			var first = ClassLoaderFactory.forCachedPluginDir();
-			var second = ClassLoaderFactory.forCachedPluginDir();
+			var first = ClassLoaderFactory.forPluginDirFromCache();
+			var second = ClassLoaderFactory.forPluginDirFromCache();
 
 			Assertions.assertSame(first, second);
-			mockedClass.verify(() -> ClassLoaderFactory.forPluginDir(), Mockito.times(1));
+			mockedClass.verify(() -> ClassLoaderFactory.forPluginDirInternal("/some/path"), Mockito.times(1));
 		}
 
 		@Test
@@ -187,16 +184,16 @@ public class ClassLoaderFactoryTest {
 			var ucl1 = Mockito.mock(URLClassLoader.class, "ucl1");
 			var ucl2 = Mockito.mock(URLClassLoader.class, "ucl2");
 			var ucl3 = Mockito.mock(URLClassLoader.class, "ucl3");
-			mockedClass.when(() -> ClassLoaderFactory.forPluginDir()).thenReturn(ucl1, ucl2, ucl3);
+			mockedClass.when(() -> ClassLoaderFactory.forPluginDirInternal(any())).thenReturn(ucl1, ucl2, ucl3);
 
 			System.setProperty("cryptomator.pluginDir", "/path/one");
-			var first = ClassLoaderFactory.forCachedPluginDir();
+			var first = ClassLoaderFactory.forPluginDirFromCache();
 
 			System.setProperty("cryptomator.pluginDir", "/path/two");
-			var second = ClassLoaderFactory.forCachedPluginDir();
+			var second = ClassLoaderFactory.forPluginDirFromCache();
 
 			System.clearProperty("cryptomator.pluginDir");
-			var third = ClassLoaderFactory.forCachedPluginDir();
+			var third = ClassLoaderFactory.forPluginDirFromCache();
 
 			Assertions.assertSame(ucl1, first);
 			Assertions.assertSame(ucl2, second);
@@ -204,7 +201,7 @@ public class ClassLoaderFactoryTest {
 			Assertions.assertNotSame(first, second);
 			Assertions.assertNotSame(second, third);
 			Assertions.assertNotSame(first, third);
-			mockedClass.verify(() -> ClassLoaderFactory.forPluginDir(), Mockito.times(3));
+			mockedClass.verify(() -> ClassLoaderFactory.forPluginDirInternal(any()), Mockito.times(3));
 		}
 	}
 

@@ -1,6 +1,7 @@
 package org.cryptomator.integrations.common;
 
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +23,10 @@ class ClassLoaderFactory {
 	private static final String PLUGIN_DIR_KEY = "cryptomator.pluginDir";
 	private static final String JAR_SUFFIX = ".jar";
 
-	@VisibleForTesting
-	static String CACHED_PLUGIN_DIR = null;
-	@VisibleForTesting
-	static URLClassLoader CACHED_CLASSLOADER = null;
+	static Cache CACHE = null;
+
+	record Cache(@Nullable String pluginDir, URLClassLoader classLoader) {
+	}
 
 	/**
 	 * Returns the cached class loader instance.
@@ -36,13 +37,12 @@ class ClassLoaderFactory {
 	 * @return The cached URLClassLoader that is aware of all {@code .jar} files in the plugin dir at the creation time of the instance
 	 */
 	@Contract(value = "-> _", pure = false)
-	public synchronized static URLClassLoader forCachedPluginDir() {
+	public synchronized static URLClassLoader forPluginDirFromCache() {
 		String currentPluginDir = System.getProperty(PLUGIN_DIR_KEY);
-		if (CACHED_CLASSLOADER == null || !Objects.equals(CACHED_PLUGIN_DIR, currentPluginDir)) {
-			CACHED_PLUGIN_DIR = currentPluginDir;
-			CACHED_CLASSLOADER = forPluginDir();
+		if (CACHE == null || !Objects.equals(CACHE.pluginDir, currentPluginDir)) {
+			CACHE = new Cache(currentPluginDir, forPluginDirInternal(currentPluginDir));
 		}
-		return CACHED_CLASSLOADER;
+		return CACHE.classLoader;
 	}
 
 	/**
@@ -54,6 +54,12 @@ class ClassLoaderFactory {
 	@Contract(value = "-> new", pure = true)
 	public static URLClassLoader forPluginDir() {
 		String val = System.getProperty(PLUGIN_DIR_KEY);
+		return forPluginDirInternal(val);
+	}
+
+	@VisibleForTesting
+	@Contract(value = "_ -> new", pure = true)
+	static URLClassLoader forPluginDirInternal(@Nullable String val) {
 		if (val == null) {
 			return URLClassLoader.newInstance(new URL[0]);
 		}
