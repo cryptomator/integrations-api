@@ -6,11 +6,14 @@ import org.cryptomator.integrations.autostart.AutoStartProvider;
 import org.cryptomator.integrations.keychain.KeychainAccessProvider;
 import org.cryptomator.integrations.tray.TrayIntegrationProvider;
 import org.cryptomator.integrations.uiappearance.UiAppearanceProvider;
+import org.cryptomator.integrations.update.UpdateMechanism;
 
 
 module org.cryptomator.integrations.api {
 	requires static org.jetbrains.annotations;
 	requires org.slf4j;
+	requires com.fasterxml.jackson.databind;
+	requires java.net.http;
 
 	exports org.cryptomator.integrations.autostart;
 	exports org.cryptomator.integrations.common;
@@ -20,6 +23,7 @@ module org.cryptomator.integrations.api {
 	exports org.cryptomator.integrations.tray;
 	exports org.cryptomator.integrations.uiappearance;
 	exports org.cryptomator.integrations.quickaccess;
+	exports org.cryptomator.integrations.update;
 
 	uses AutoStartProvider;
 	uses KeychainAccessProvider;
@@ -29,4 +33,5 @@ module org.cryptomator.integrations.api {
 	uses TrayMenuController;
 	uses UiAppearanceProvider;
 	uses QuickAccessService;
+	uses UpdateMechanism;
 }

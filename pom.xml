@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.cryptomator</groupId>
 	<artifactId>integrations-api</artifactId>
-	<version>1.7.0</version>
+	<version>1.8.0-beta1</version>
 
 	<name>Cryptomator Integrations API</name>
 	<description>Defines optional service interfaces that may be used by Cryptomator</description>
@@ -27,22 +27,23 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jdk.version>21</jdk.version>
+		<jdk.version>25</jdk.version>
 
 		<slf4j.version>2.0.17</slf4j.version>
-		<jetbrains-annotation.version>26.0.2-1</jetbrains-annotation.version>
+		<jackson.version>2.21.1</jackson.version>
+		<jetbrains-annotation.version>26.1.0</jetbrains-annotation.version>
 
 		<!-- Test dependencies -->
-		<junit.version>5.13.4</junit.version>
-		<mockito.version>5.19.0</mockito.version>
+		<junit.version>6.0.1</junit.version>
+		<mockito.version>5.21.0</mockito.version>
 
 		<!-- Build dependencies -->
-		<mvn-compiler.version>3.14.0</mvn-compiler.version>
-		<mvn-source.version>3.3.1</mvn-source.version>
-		<mvn-surefire.version>3.5.4</mvn-surefire.version>
-		<mvn-javadoc.version>3.11.3</mvn-javadoc.version>
+		<mvn-compiler.version>3.15.0</mvn-compiler.version>
+		<mvn-source.version>3.4.0</mvn-source.version>
+		<mvn-surefire.version>3.5.5</mvn-surefire.version>
+		<mvn-javadoc.version>3.12.0</mvn-javadoc.version>
 		<mvn-gpg.version>3.2.8</mvn-gpg.version>
-		<central-publishing.version>0.8.0</central-publishing.version>
+		<central-publishing.version>0.10.0</central-publishing.version>
 	</properties>
 
 	<licenses>
@@ -58,6 +59,11 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
 		</dependency>
 
 		<dependency>
@@ -126,7 +132,7 @@
 				</executions>
 				<configuration>
 					<quiet>true</quiet>
-					<release>21</release>
+					<release>25</release>
 					<tags>
 						<!-- workaround for "unknown tag: implNote", see https://blog.codefx.org/java/new-javadoc-tags/#Maven  -->
 						<tag>
