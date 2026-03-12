@@ -1,6 +1,7 @@
 package org.cryptomator.integrations.common;
 
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 class ClassLoaderFactory {
@@ -20,6 +22,28 @@ class ClassLoaderFactory {
 	private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderFactory.class);
 	private static final String PLUGIN_DIR_KEY = "cryptomator.pluginDir";
 	private static final String JAR_SUFFIX = ".jar";
+
+	static Cache CACHE = null;
+
+	record Cache(@Nullable String pluginDir, URLClassLoader classLoader) {
+	}
+
+	/**
+	 * Returns the cached class loader instance.
+	 * <p>
+	 * The returned instance does not recheck the pluginDir for updates.
+	 * If no instance is cached or the system property changed, creates a new instance with {@link #forPluginDir()} and caches it.
+	 *
+	 * @return The cached URLClassLoader that is aware of all {@code .jar} files in the plugin dir at the creation time of the instance
+	 */
+	@Contract(value = "-> _", pure = false)
+	public synchronized static URLClassLoader forPluginDirFromCache() {
+		String currentPluginDir = System.getProperty(PLUGIN_DIR_KEY);
+		if (CACHE == null || !Objects.equals(CACHE.pluginDir, currentPluginDir)) {
+			CACHE = new Cache(currentPluginDir, forPluginDirInternal(currentPluginDir));
+		}
+		return CACHE.classLoader;
+	}
 
 	/**
 	 * Attempts to find {@code .jar} files in the path specified in {@value #PLUGIN_DIR_KEY} system property.
@@ -30,6 +54,12 @@ class ClassLoaderFactory {
 	@Contract(value = "-> new", pure = true)
 	public static URLClassLoader forPluginDir() {
 		String val = System.getProperty(PLUGIN_DIR_KEY);
+		return forPluginDirInternal(val);
+	}
+
+	@VisibleForTesting
+	@Contract(value = "_ -> new", pure = true)
+	static URLClassLoader forPluginDirInternal(@Nullable String val) {
 		if (val == null) {
 			return URLClassLoader.newInstance(new URL[0]);
 		}
