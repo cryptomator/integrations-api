@@ -1,11 +1,16 @@
 package org.cryptomator.integrations.common;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
 import java.io.ByteArrayInputStream;
@@ -16,6 +21,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Comparator;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 
 public class ClassLoaderFactoryTest {
 
@@ -91,21 +99,49 @@ public class ClassLoaderFactoryTest {
 		}
 	}
 
-	@Test
-	@DisplayName("read path from cryptomator.pluginDir and replace ~/ with user.home")
-	public void testReadPluginDirFromSysPropAndReplaceHome() {
-		var ucl = Mockito.mock(URLClassLoader.class, "ucl");
-		var relPath = "~/there/will/be/plugins";
-		var absPath = Path.of(System.getProperty("user.home")).resolve("there/will/be/plugins");
-		try (var mockedClass = Mockito.mockStatic(ClassLoaderFactory.class)) {
-			mockedClass.when(() -> ClassLoaderFactory.forPluginDir()).thenCallRealMethod();
-			mockedClass.when(() -> ClassLoaderFactory.forPluginDirWithPath(absPath)).thenReturn(ucl);
+	@Nested
+	@DisplayName("when the system property contains invalid values")
+	public class InvalidSystemProperty {
 
-			System.setProperty("cryptomator.pluginDir", relPath);
+		MockedStatic<ClassLoaderFactory> mockedClass;
+
+		@BeforeEach
+		public void beforeEach() {
+			mockedClass = Mockito.mockStatic(ClassLoaderFactory.class);
+			mockedClass.when(() -> ClassLoaderFactory.forPluginDir()).thenCallRealMethod();
+			mockedClass.when(() -> ClassLoaderFactory.forPluginDirWithPath(any())).thenReturn(null);
+		}
+
+		@AfterEach
+		public void afterEach() {
+			mockedClass.close();
+		}
+
+
+		@Test
+		@DisplayName("Undefined cryptomator.pluginDir returns empty URLClassLoader")
+		public void testUndefinedSysProp() {
+			System.clearProperty("cryptomator.pluginDir");
 			var result = ClassLoaderFactory.forPluginDir();
 
-			Assertions.assertSame(ucl, result);
+			mockedClass.verify(() -> ClassLoaderFactory.forPluginDirWithPath(any()), never());
+			Assertions.assertNotNull(result);
+			Assertions.assertEquals(0, result.getURLs().length);
 		}
+
+		@ParameterizedTest
+		@DisplayName("Property cryptomator.pluginDir filled with blanks returns empty URLClassLoader")
+		@EmptySource
+		@ValueSource(strings = {"\t\t", "  "})
+		public void testBlankSysProp(String propValue) {
+			System.setProperty("cryptomator.pluginDir", propValue);
+			var result = ClassLoaderFactory.forPluginDir();
+
+			mockedClass.verify(() -> ClassLoaderFactory.forPluginDirWithPath(any()), never());
+			Assertions.assertNotNull(result);
+			Assertions.assertEquals(0, result.getURLs().length);
+		}
+
 	}
 
 	@Test

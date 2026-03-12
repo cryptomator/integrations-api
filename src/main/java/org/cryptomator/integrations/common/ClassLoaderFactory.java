@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 class ClassLoaderFactory {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderFactory.class);
-	private static final String USER_HOME = System.getProperty("user.home");
 	private static final String PLUGIN_DIR_KEY = "cryptomator.pluginDir";
 	private static final String JAR_SUFFIX = ".jar";
 
@@ -30,21 +29,27 @@ class ClassLoaderFactory {
 	 */
 	@Contract(value = "-> new", pure = true)
 	public static URLClassLoader forPluginDir() {
-		String val = System.getProperty(PLUGIN_DIR_KEY, "");
-		final Path p;
-		if (val.startsWith("~/")) {
-			p = Path.of(USER_HOME).resolve(val.substring(2));
-		} else {
-			p = Path.of(val);
+		String val = System.getProperty(PLUGIN_DIR_KEY);
+		if (val == null) {
+			return URLClassLoader.newInstance(new URL[0]);
 		}
-		return forPluginDirWithPath(p);
+
+		try {
+			if (val.isBlank()) {
+				throw new IllegalArgumentException("Plugin dir path is blank");
+			}
+			return forPluginDirWithPath(Path.of(val)); //Path.of() might throw InvalidPathException
+		} catch (IllegalArgumentException e) {
+			LOG.debug("{} contains illegal value. Skipping plugin directory.", PLUGIN_DIR_KEY, e);
+			return URLClassLoader.newInstance(new URL[0]);
+		}
 	}
 
 	@VisibleForTesting
 	@Contract(value = "_ -> new", pure = true)
 	static URLClassLoader forPluginDirWithPath(Path path) throws UncheckedIOException {
 		var jars = findJars(path);
-		if (LOG.isDebugEnabled()) {
+		if (LOG.isDebugEnabled() && jars.length != 0) {
 			String jarList = Arrays.stream(jars).map(URL::getPath).collect(Collectors.joining(", "));
 			LOG.debug("Found jars in cryptomator.pluginDir: {}", jarList);
 		}
@@ -56,7 +61,7 @@ class ClassLoaderFactory {
 		try (var stream = Files.walk(path)) {
 			return stream.filter(ClassLoaderFactory::isJarFile).map(ClassLoaderFactory::toUrl).toArray(URL[]::new);
 		} catch (IOException | UncheckedIOException e) {
-			// unable to locate any jars // TODO: log a warning?
+			LOG.debug("Failed to read plugin dir {}", path, e);
 			return new URL[0];
 		}
 	}

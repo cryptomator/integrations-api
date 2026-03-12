@@ -15,8 +15,8 @@ jobs:
       id-token: write # Required for the attestations step
       attestations: write # Required for the attestations step
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-java@v5
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
         with:
           distribution: 'temurin'
           java-version: ${{ env.JAVA_VERSION }}
@@ -28,12 +28,12 @@ jobs:
         run: mvn -B verify --no-transfer-progress
       - name: Attest
         if: startsWith(github.ref, 'refs/tags/')
-        uses: actions/attest-build-provenance@v3
+        uses: actions/attest-build-provenance@96278af6caaf10aea03fd8d33a09a777ca52d62f # v3.2.0
         with:
           subject-path: |
             target/*.jar
             target/*.pom
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: artifacts
           path: target/*.jar
@@ -45,8 +45,8 @@ jobs:
     needs: [build]
     if: github.repository_owner == 'cryptomator' && (startsWith(github.ref, 'refs/tags/') || contains(github.event.head_commit.message, '[deploy]'))
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-java@v5
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
         with:
           distribution: 'temurin'
           java-version: ${{ env.JAVA_VERSION }}
@@ -54,11 +54,9 @@ jobs:
           server-id: central
           server-username: MAVEN_CENTRAL_USERNAME
           server-password: MAVEN_CENTRAL_PASSWORD
-      - name: Verify project version matches tag
+      - name: Ensure to use tagged version
         if: startsWith(github.ref, 'refs/tags/')
-        run: |
-          PROJECT_VERSION=$(mvn help:evaluate "-Dexpression=project.version" -q -DforceStdout)
-          test "$PROJECT_VERSION" = "${GITHUB_REF##*/}"
+        run: mvn versions:set --file ./pom.xml -DnewVersion=${GITHUB_REF##*/}
       - name: Verify project version is -SNAPSHOT
         if: startsWith(github.ref, 'refs/tags/') == false
         run: |
@@ -81,17 +79,15 @@ jobs:
     needs: [build]
     if: github.repository_owner == 'cryptomator' && (startsWith(github.ref, 'refs/tags/') || contains(github.event.head_commit.message, '[deploy]'))
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-java@v5
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
           cache: 'maven'
-      - name: Verify project version matches tag
+      - name: Ensure to use tagged version
         if: startsWith(github.ref, 'refs/tags/')
-        run: |
-          PROJECT_VERSION=$(mvn help:evaluate "-Dexpression=project.version" -q -DforceStdout)
-          test "$PROJECT_VERSION" = "${GITHUB_REF##*/}"
+        run: mvn versions:set --file ./pom.xml -DnewVersion=${GITHUB_REF##*/}
       - name: Verify project version is -SNAPSHOT
         if: startsWith(github.ref, 'refs/tags/') == false
         run: |
@@ -114,7 +110,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     steps:
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@6da8fa9354ddfdc4aeace5fc48d7f679b5214090 # v2.4.1
         with:
           prerelease: true
           token: ${{ secrets.CRYPTOBOT_RELEASE_TOKEN }}
