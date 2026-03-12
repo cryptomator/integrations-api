@@ -8,7 +8,7 @@ The changelog starts with version 1.7.0.
 Changes to prior versions can be found on the [Github release page](https://github.com/cryptomator/integrations-api/releases).
 
 
-## [Unreleased](https://github.com/cryptomator/integrations-api/compare/1.7.0...HEAD)
+## [1.8.0](https://github.com/cryptomator/integrations-api/releases/1.8.0) - 2026-03-12
 
 ### Added
 * Experimental [Update API](https://github.com/cryptomator/integrations-api/blob/a522f36cf45884127e2431dd18222391669d5992/src/main/java/org/cryptomator/integrations/update/UpdateMechanism.java) (#72)
