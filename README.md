@@ -13,3 +13,13 @@ Implementations of the Integrations API can be found here:
 - https://github.com/cryptomator/integrations-win
 - https://github.com/cryptomator/integrations-mac
 - https://github.com/cryptomator/integrations-linux
+
+## Building
+
+Required dependency:
+- JDK 25
+
+Build with:
+```bash
+./mvnw verify
+```
