@@ -23,6 +23,14 @@ public class IntegrationsLoader {
 	private IntegrationsLoader() {
 	}
 
+	private static class PluginClassLoaderHolder {
+		private static final ClassLoader CLASS_LOADER = ClassLoaderFactory.forPluginDir();
+	}
+
+	private static ClassLoader getClassLoader() {
+		return PluginClassLoaderHolder.CLASS_LOADER;
+	}
+
 	/**
 	 * Loads the best suited service provider, i.e. the one with the highest priority that is supported.
 	 * <p>
@@ -44,7 +52,7 @@ public class IntegrationsLoader {
 	 * @param <T> Type of the service
 	 */
 	public static <T> Optional<T> loadSpecific(Class<T> clazz, String implementationClassName) {
-		return ServiceLoader.load(clazz, ClassLoaderFactory.forPluginDir()).stream()
+		return ServiceLoader.load(clazz, getClassLoader()).stream()
 				.filter(provider -> provider.type().getName().equals(implementationClassName))
 				.map(ServiceLoader.Provider::get)
 				.findAny();
@@ -61,7 +69,7 @@ public class IntegrationsLoader {
 	 * @return An ordered stream of all suited service providers
 	 */
 	public static <T> Stream<T> loadAll(Class<T> clazz) {
-		return loadAll(ServiceLoader.load(clazz, ClassLoaderFactory.forPluginDir()), clazz);
+		return loadAll(ServiceLoader.load(clazz, getClassLoader()), clazz);
 	}
 
 	/**
