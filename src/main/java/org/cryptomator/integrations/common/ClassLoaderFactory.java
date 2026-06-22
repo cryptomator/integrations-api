@@ -23,7 +23,7 @@ class ClassLoaderFactory {
 
 	/**
 	 * Attempts to find {@code .jar} files in the path specified in {@value #PLUGIN_DIR_KEY} system property.
-	 * A new class loader instance is returned that loads classes from the given classes.
+	 * A new class loader instance is returned that loads classes from the given directory.
 	 *
 	 * @return A new URLClassLoader that is aware of all {@code .jar} files in the plugin dir
 	 */
