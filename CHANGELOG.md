@@ -13,6 +13,8 @@ Changes to prior versions can be found on the [Github release page](https://gith
 ### Changed
 * Cache the plugin directory class loader ([#88](https://github.com/cryptomator/integrations-api/pull/88))
 * Use Maven Wrapper (bb7dafc8bd31889eeabeaa838b2630969ca11bf0)
+* Bump dependencies `org.slf4j:slf4j-*` from version `2.0.17` to `2.0.18`
+
 
 ## [1.8.0](https://github.com/cryptomator/integrations-api/releases/1.8.0) - 2026-03-12
 
