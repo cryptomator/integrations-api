@@ -10,8 +10,9 @@ Changes to prior versions can be found on the [Github release page](https://gith
 
 ## [Unreleased](https://github.com/cryptomator/integrations-api/compare/1.8.0...HEAD)
 
-No changes yet.
-
+### Changed
+* Cache the plugin directory class loader ([#88](https://github.com/cryptomator/integrations-api/pull/88))
+* Use Maven Wrapper (bb7dafc8bd31889eeabeaa838b2630969ca11bf0)
 
 ## [1.8.0](https://github.com/cryptomator/integrations-api/releases/1.8.0) - 2026-03-12
 
