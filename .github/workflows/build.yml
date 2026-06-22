@@ -1,8 +1,7 @@
 name: Build
 on:
   push:
-  pull_request_target:
-    types: [labeled]
+  pull_request:
 
 env:
   JAVA_VERSION: 25
