@@ -10,7 +10,9 @@ Changes to prior versions can be found on the [Github release page](https://gith
 
 ## [Unreleased](https://github.com/cryptomator/integrations-api/compare/1.9.0...HEAD)
 
-No changes yet.
+### Changed
+* Updated dependencies:
+  - `com.fasterxml.jackson.core:jackson-databind` from `2.22.0` to `2.21.6` (2.21.x is LTS)
 
 
 ## [1.9.0](https://github.com/cryptomator/integrations-api/compare/1.9.0) - 2026-06-22
