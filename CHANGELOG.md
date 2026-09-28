@@ -8,16 +8,24 @@ The changelog starts with version 1.7.0.
 Changes to prior versions can be found on the [Github release page](https://github.com/cryptomator/integrations-api/releases).
 
 
-## [1.9.0](https://github.com/cryptomator/integrations-api/compare/1.9.0) - 2026-06-22
+## [1.9.1](https://github.com/cryptomator/integrations-api/releases/tag/1.9.1) - 2026-09-28
+
+### Changed
+* Updated dependencies:
+  - (downgrade) `com.fasterxml.jackson.core:jackson-databind` from `2.22.0` to `2.21.6` (2.21.x is LTS)
+  - `org.slf4j:slf4j-api` from `2.0.18` to `2.0.20`
+
+
+## [1.9.0](https://github.com/cryptomator/integrations-api/releases/tag/1.9.0) - 2026-06-22
 
 ### Changed
 * Cache the plugin directory class loader ([#88](https://github.com/cryptomator/integrations-api/pull/88))
 * Use Maven Wrapper (bb7dafc8bd31889eeabeaa838b2630969ca11bf0)
 * Updated dependencies:
-  - `org.slf4j:slf4j-*` from `2.0.17` to `2.0.18`
+  - `org.slf4j:slf4j-api` from `2.0.17` to `2.0.18`
 
 
-## [1.8.0](https://github.com/cryptomator/integrations-api/releases/1.8.0) - 2026-03-12
+## [1.8.0](https://github.com/cryptomator/integrations-api/releases/tag/1.8.0) - 2026-03-12
 
 ### Added
 * Experimental [Update API](https://github.com/cryptomator/integrations-api/blob/a522f36cf45884127e2431dd18222391669d5992/src/main/java/org/cryptomator/integrations/update/UpdateMechanism.java) (#72)
