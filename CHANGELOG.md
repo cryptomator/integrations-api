@@ -12,7 +12,8 @@ Changes to prior versions can be found on the [Github release page](https://gith
 
 ### Changed
 * Updated dependencies:
-  - `com.fasterxml.jackson.core:jackson-databind` from `2.22.0` to `2.21.6` (2.21.x is LTS)
+  - (downgrade) `com.fasterxml.jackson.core:jackson-databind` from `2.22.0` to `2.21.6` (2.21.x is LTS)
+  - `org.slf4j:slf4j-api` from `2.0.18` to `2.0.20`
 
 
 ## [1.9.0](https://github.com/cryptomator/integrations-api/releases/tag/1.9.0) - 2026-06-22
