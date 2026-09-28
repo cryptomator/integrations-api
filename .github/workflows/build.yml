@@ -17,7 +17,7 @@ jobs:
       artifact-metadata: write # Required for the attestations step
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
         with:
           distribution: 'temurin'
           java-version: ${{ env.JAVA_VERSION }}
@@ -48,7 +48,7 @@ jobs:
     if: github.repository_owner == 'cryptomator' && (startsWith(github.ref, 'refs/tags/') || contains(github.event.head_commit.message, '[deploy]'))
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
         with:
           distribution: 'temurin'
           java-version: ${{ env.JAVA_VERSION }}
@@ -83,7 +83,7 @@ jobs:
     if: github.repository_owner == 'cryptomator' && (startsWith(github.ref, 'refs/tags/') || contains(github.event.head_commit.message, '[deploy]'))
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
@@ -113,7 +113,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     steps:
       - name: Create Release
-        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3.0.2
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
           prerelease: true
           token: ${{ secrets.CRYPTOBOT_RELEASE_TOKEN }}
