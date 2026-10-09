@@ -10,7 +10,7 @@ Changes to prior versions can be found on the [Github release page](https://gith
 ## [Unreleased](https://github.com/cryptomator/integrations-api/compare/1.9.1...HEAD)
 
 ### Added
-* Let a mount report that it ended, whether unmounted through the API or not, via `Mount#whenTerminated()` and `MountCapability.WHEN_TERMINATED`
+* Let providers report when a mount terminates, whether unmounted through the API or not, via `Mount#whenTerminated()` and `MountCapability.WHEN_TERMINATED` ([#105](https://github.com/cryptomator/integrations-api/pull/105))
 
 
 ## [1.9.1](https://github.com/cryptomator/integrations-api/releases/tag/1.9.1) - 2026-09-28
