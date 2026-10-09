@@ -1,6 +1,7 @@
 package org.cryptomator.integrations.mount;
 
 import java.io.IOException;
+import java.util.concurrent.CompletionStage;
 
 /**
  * Handle to control the lifecycle of a mounted file system.
@@ -33,6 +34,19 @@ public interface Mount extends AutoCloseable {
 	 * @throws UnsupportedOperationException If {@link MountCapability#UNMOUNT_FORCED} is not supported
 	 */
 	default void unmountForced() throws UnmountFailedException {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * If supported, returns a stage that completes once this mount has ended for any reason, whether it was unmounted through this mount or not (e.g. ejected by the user, or the process serving it died).
+	 * <p>
+	 * The stage always completes normally. Completion does not release resources; {@link #close()} is still required.
+	 *
+	 * @return A stage that completes once this mount has ended
+	 * @throws UnsupportedOperationException If {@link MountCapability#WHEN_TERMINATED} is not supported
+	 * @implSpec A provider may only declare {@link MountCapability#WHEN_TERMINATED} if it observes every end of its mounts.
+	 */
+	default CompletionStage<Void> whenTerminated() {
 		throw new UnsupportedOperationException();
 	}
 
