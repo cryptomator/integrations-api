@@ -81,5 +81,10 @@ public enum MountCapability {
 	/**
 	 * The builder supports {@link MountBuilder#setVolumeName(String)}.
 	 */
-	VOLUME_NAME
+	VOLUME_NAME,
+
+	/**
+	 * The mount supports {@link Mount#whenTerminated()}.
+	 */
+	WHEN_TERMINATED
 }
