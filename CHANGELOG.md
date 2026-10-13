@@ -7,7 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 The changelog starts with version 1.7.0.
 Changes to prior versions can be found on the [Github release page](https://github.com/cryptomator/integrations-api/releases).
 
-## [Unreleased](https://github.com/cryptomator/integrations-api/compare/1.9.1...HEAD)
+## [Unreleased](https://github.com/cryptomator/integrations-api/compare/1.10.0...HEAD)
+
+No changes yet.
+
+
+## [1.10.0](https://github.com/cryptomator/integrations-api/releases/tag/1.10.0) - 2026-10-13
 
 ### Added
 * Let providers report when a mount terminates, whether unmounted through the API or not, via `Mount#whenTerminated()` and `MountCapability.WHEN_TERMINATED` ([#105](https://github.com/cryptomator/integrations-api/pull/105))
