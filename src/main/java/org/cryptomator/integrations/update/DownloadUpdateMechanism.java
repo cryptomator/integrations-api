@@ -63,7 +63,7 @@ public abstract class DownloadUpdateMechanism implements UpdateMechanism<Downloa
 			LOG.debug("Rejected unsafe asset name: \"{}\"", asset.name());
 			throw new UpdateFailedException("Asset name is not a safe file name.");
 		}
-		var digest = parseDigest(asset.digest());
+		var digest = parseSha256Digest(asset.digest());
 		try {
 			Path workDir = Files.createTempDirectory("cryptomator-update");
 			return new FirstStep(workDir, updateInfo, digest);
@@ -77,10 +77,12 @@ public abstract class DownloadUpdateMechanism implements UpdateMechanism<Downloa
 		return name != null && SAFE_ASSET_NAME.matcher(name).matches();
 	}
 
-	// returns the expected SHA-256 checksum or null, if the digest is not in "sha256:<hex>" format
-	private static byte @Nullable [] parseDigest(String digest) throws UpdateFailedException {
+	// returns the expected SHA-256 checksum or null, if the digest is not prefixed with "sha256:"; throws if the hex part is not exactly 64 hex chars
+	static byte @Nullable [] parseSha256Digest(String digest) throws UpdateFailedException {
 		if (!digest.startsWith("sha256:")) {
 			return null;
+		} else if (digest.length() != 71) {
+			throw new UpdateFailedException("Malformed asset digest: expected 64 hexadecimal characters for SHA-256.");
 		}
 		try {
 			return HexFormat.of().withLowerCase().parseHex(digest.substring(7)); // remove "sha256:" prefix
