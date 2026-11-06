@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 The changelog starts with version 1.7.0.
 Changes to prior versions can be found on the [Github release page](https://github.com/cryptomator/integrations-api/releases).
 
-## [Unreleased](https://github.com/cryptomator/integrations-api/compare/1.10.0...HEAD)
+## [1.10.1](https://github.com/cryptomator/integrations-api/releases/tag/1.10.1) - 2026-11-06
 
 ### Changed
 * Updated dependencies:
