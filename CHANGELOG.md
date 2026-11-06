@@ -9,11 +9,15 @@ Changes to prior versions can be found on the [Github release page](https://gith
 
 ## [Unreleased](https://github.com/cryptomator/integrations-api/compare/1.10.0...HEAD)
 
-### Security
-* `DownloadUpdateMechanism` rejects assets whose name is not a plain file name, preventing the download from being written outside of its temporary working directory
+### Changed
+* Updated dependencies:
+  - `com.fasterxml.jackson.core:jackson-databind` from `2.21.7` to `2.21.8`
 
 ### Fixed
 * `DownloadUpdateMechanism` reports a malformed asset digest as `UpdateFailedException` instead of `IllegalArgumentException`
+
+### Security
+* `DownloadUpdateMechanism` rejects assets whose name is not a plain file name, preventing the download from being written outside of its temporary working directory
 
 
 ## [1.10.0](https://github.com/cryptomator/integrations-api/releases/tag/1.10.0) - 2026-10-13
