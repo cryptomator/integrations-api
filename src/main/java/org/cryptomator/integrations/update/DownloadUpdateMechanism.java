@@ -19,12 +19,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HexFormat;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public abstract class DownloadUpdateMechanism implements UpdateMechanism<DownloadUpdateInfo> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DownloadUpdateMechanism.class);
 	private static final String LATEST_VERSION_API_URL = "https://api.cryptomator.org/connect/apps/desktop/latest-version?format=1";
 	private static final ObjectMapper MAPPER = new ObjectMapper();
+	private static final Pattern SAFE_ASSET_NAME = Pattern.compile("[A-Za-z0-9][A-Za-z0-9._+-]*");
 
 	@Override
 	public DownloadUpdateInfo checkForUpdate(String currentVersion, HttpClient httpClient) {
@@ -51,15 +53,41 @@ public abstract class DownloadUpdateMechanism implements UpdateMechanism<Downloa
 	 * Returns the first step to prepare the update. This downloads the {@link DownloadUpdateInfo#asset() asset} to a temporary location and verifies its checksum.
 	 * @param updateInfo The {@link DownloadUpdateInfo} retrieved from {@link #checkForUpdate(String, HttpClient)}.
 	 * @return a new {@link UpdateStep} that can be used to monitor the download progress.
-	 * @throws UpdateFailedException When failing to prepare a temporary download location.
+	 * @throws UpdateFailedException When the asset's name is not a plain file name, its digest is malformed, or when failing to prepare a temporary download location.
 	 */
 	@Override
 	public UpdateStep firstStep(DownloadUpdateInfo updateInfo) throws UpdateFailedException {
+		var asset = updateInfo.asset();
+		// the name is used as file name in the work dir, so it must not be able to point anywhere else
+		if (!isSafeAssetName(asset.name())) {
+			LOG.debug("Rejected unsafe asset name: \"{}\"", asset.name());
+			throw new UpdateFailedException("Asset name is not a safe file name.");
+		}
+		var digest = parseSha256Digest(asset.digest());
 		try {
 			Path workDir = Files.createTempDirectory("cryptomator-update");
-			return new FirstStep(workDir, updateInfo);
+			return new FirstStep(workDir, updateInfo, digest);
 		} catch (IOException e) {
 			throw new UpdateFailedException("Failed to create temporary directory for update", e);
+		}
+	}
+
+	// allowlist of plain file names: no path separators, no drive letters, no leading dot, no shell metacharacters
+	static boolean isSafeAssetName(@Nullable String name) {
+		return name != null && SAFE_ASSET_NAME.matcher(name).matches();
+	}
+
+	// returns the expected SHA-256 checksum or null, if the digest is not prefixed with "sha256:"; throws if the hex part is not exactly 64 hex chars
+	static byte @Nullable [] parseSha256Digest(String digest) throws UpdateFailedException {
+		if (!digest.startsWith("sha256:")) {
+			return null;
+		} else if (digest.length() != 71) {
+			throw new UpdateFailedException("Malformed asset digest: expected 64 hexadecimal characters for SHA-256.");
+		}
+		try {
+			return HexFormat.of().withLowerCase().parseHex(digest.substring(7)); // remove "sha256:" prefix
+		} catch (IllegalArgumentException e) {
+			throw new UpdateFailedException("Malformed asset digest.", e);
 		}
 	}
 
@@ -104,12 +132,9 @@ public abstract class DownloadUpdateMechanism implements UpdateMechanism<Downloa
 		private final Path workDir;
 		private final DownloadUpdateInfo updateInfo;
 
-		public FirstStep(Path workDir, DownloadUpdateInfo updateInfo) {
+		public FirstStep(Path workDir, DownloadUpdateInfo updateInfo, byte @Nullable [] digest) {
 			var uri = URI.create(updateInfo.asset().downloadUrl);
 			var destination = workDir.resolve(updateInfo.asset().name);
-			var digest = updateInfo.asset().digest().startsWith("sha256:")
-					? HexFormat.of().withLowerCase().parseHex(updateInfo.asset().digest.substring(7)) // remove "sha256:" prefix
-					: null;
 			var size = updateInfo.asset().size;
 			super(uri, destination, digest, size);
 			this.workDir = workDir;
